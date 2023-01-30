@@ -1,0 +1,18 @@
+=======================
+ANSIBLE PATCHING REPORT
+=======================
+
+Created on {{ template_run_date }}
+
+{% for update in r_installed.updates %}
+    {% if not update.installed %}
+
+TITLE: {{ update.title }}
+FAILURE_CODE: {{ update.failure_hresult_code }}
+MESSAGE: {{ update.failure_msg }}
+
+KBS: [{{ update.kb | join(', ') }}]
+CATEGORIES[{{ update.categories | join(', ') }}]
+
+    {% endif %}
+{% endfor %}
