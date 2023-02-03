@@ -1,0 +1,33 @@
+---
+- name: Add MSSQL tools yum repo
+  ansible.builtin.get_url:
+      url: "{{ mssql_tools_repo_url }}"
+      dest: "/etc/yum.repos.d/{{ mssql_tools_repo_name }}.repo"
+      mode: "0644"
+
+- name: Remove older unixODBC packages
+  ansible.builtin.yum:
+    name:
+      - unixODBC-utf16
+      - unixODBC-utf16-devel
+    state: absent
+
+- name: Install latest tools
+  environment:
+    ACCEPT_EULA: "Y"
+  ansible.builtin.yum:
+    name:
+      - mssql-tools
+      - unixODBC-devel
+    state: present
+
+- name: Add to bash profile
+  loop: "{{ mssql_tools_users }}"
+  loop_control:
+    loop_var: user
+  ansible.builtin.lineinfile:
+    path: "/home/{{ user }}/.bash_profile"
+    line: 'export PATH="$PATH:/opt/mssql-tools/bin"'
+    create: yes
+    owner: "{{ user }}"
+    group: "{{ user }}"

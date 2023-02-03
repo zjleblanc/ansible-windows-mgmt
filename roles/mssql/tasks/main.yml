@@ -1,0 +1,39 @@
+---
+- name: Add MSSQL yum repo
+  ansible.builtin.get_url:
+      url: "{{ mssql_repo_url }}"
+      dest: "/etc/yum.repos.d/{{ mssql_repo_name }}.repo"
+      mode: "0644"
+
+- name: Install MSSQL
+  ansible.builtin.yum:
+    name: mssql-server
+    state: present
+
+- name: Check if service exists
+  ansible.builtin.stat:
+    path: /usr/lib/systemd/system/mssql-server.service
+  register: r_mssql_service
+
+- name: Configure MSSQL
+  when: not r_mssql_service.stat.exists
+  environment:
+    ACCEPT_EULA: "Y"
+    MSSQL_PID: "{{ mssql_pid }}"
+    MSSQL_SA_PASSWORD: "{{ mssql_sa_pwd }}"
+    MSSQL_TCP_PORT: "{{ mssql_tcp_port }}"
+  ansible.builtin.command: /opt/mssql/bin/mssql-conf -n setup
+
+- name: Permit traffic in public zone for mssql service
+  ansible.posix.firewalld:
+    zone: public
+    port: 1433/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Install developer tools
+  when: mssql_tools_include
+  include_tasks: tools.yml
+  vars:
+    mssql_tools_users: [zach]
