@@ -1,5 +1,5 @@
 ---
-- hosts: plex
+- hosts: all
   gather_facts: yes
 
   tasks:
