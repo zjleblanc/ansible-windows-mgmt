@@ -4,11 +4,11 @@
 
   tasks:
     - name: Report Ansible Facts
-      debug:
+      ansible.builtin.debug:
         var: ansible_facts
 
     - name: Patch server
-      include_role: 
+      ansible.builtin.include_role: 
         name: patch
 
     # - name: Patch server (turn off reporting)
