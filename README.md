@@ -7,3 +7,6 @@ Ansible repository for content used to manage Windows servers
 
 ## Roles
 - [patch](./roles/patch/README.md)
+
+## Demos
+- [Patch Windows](./demos/patch.yml)<br>Beginner Level Implementation

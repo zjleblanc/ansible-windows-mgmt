@@ -1,0 +1,41 @@
+---
+- name: Patch windows server
+  hosts: all
+  gather_facts: true
+
+  vars:
+    patch_allow_reboot: true
+    patch_failed_report: true
+    patch_failed_report_dest: "C:\\ansible_failed_updates.txt"
+    patch_categories:
+      - SecurityUpdates
+      - CriticalUpdates
+      - UpdateRollups
+
+  tasks:
+    - name: Report Ansible Facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - name: List updates
+      register: r_searched
+      ansible.windows.win_updates:
+        category_names: "{{ patch_categories }}"
+        accept_list: "{{ patch_kbs | default(omit) }}"
+        state: searched
+
+    - name: Install updates
+      register: r_installed
+      ansible.windows.win_updates:
+        category_names: "{{ patch_categories }}"
+        accept_list: "{{ patch_kbs | default(omit) }}"
+        reboot: "{{ patch_allow_reboot }}"
+        state: installed
+
+    - name: Report any failed updates
+      when:
+        - patch_failed_report
+        - r_installed.failed_update_count
+      ansible.builtin.template:
+        src: failed_report.txt.j2
+        dest: "{{ patch_failed_report_dest }}"
