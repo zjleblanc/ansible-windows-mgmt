@@ -18,6 +18,6 @@
   when:
     - patch_failed_report
     - r_installed.failed_update_count
-  ansible.builtin.template: 
+  ansible.builtin.template:
     src: failed_report.txt.j2
     dest: "{{ patch_failed_report_dest }}"

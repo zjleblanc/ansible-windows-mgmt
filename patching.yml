@@ -1,6 +1,7 @@
 ---
-- hosts: all
-  gather_facts: yes
+- name: Patch windows server
+  hosts: all
+  gather_facts: true
 
   tasks:
     - name: Report Ansible Facts
@@ -8,7 +9,7 @@
         var: ansible_facts
 
     - name: Patch server
-      ansible.builtin.include_role: 
+      ansible.builtin.include_role:
         name: patch
 
     # - name: Patch server (turn off reporting)
