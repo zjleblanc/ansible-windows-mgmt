@@ -9,4 +9,5 @@ Ansible repository for content used to manage Windows servers
 - [patch](./roles/patch/README.md)
 
 ## Demos
-- [Patch Windows](./demos/patch.yml)<br>Beginner Level Implementation
+- [Patch Windows servers](./demos/patch.yml)<br>Beginner Level Implementation
+- [Clones VMs from template](./demos/proxmox_vm_clone.yml)<br>Clone a VM and create one or more copies

@@ -1,0 +1,51 @@
+---
+- name: Create Proxmox VMs
+  hosts: controlbox
+  connection: local
+
+  tasks:
+    - name: Assert required proxmox creds
+      ansible.builtin.assert:
+        that:
+          - proxmox_api_host is defined
+          - proxmox_api_user is defined
+          - proxmox_api_token_id is defined
+          - proxmox_api_token_secret is defined
+        fail_msg: "Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]"
+
+    - name: Build VMs via defined configs
+      when: proxmox_ve_configs is defined
+      loop: "{{ proxmox_ve_configs }}"
+      loop_control:
+        loop_var: pve_config
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        api_user: "{{ proxmox_api_user }}"
+        clone: "{{ pve_config.clone }}"
+        cores: "{{ pve_config.cores | default(omit) }}"
+        memory: "{{ pve_config.memory | default(omit) }}"
+        name: "{{ pve_config.name }}"
+        nameservers: "{{ pve_config.nameservers | default(omit) }}"
+        node: "{{ pve_config.node }}"
+        sockets: "{{ pve_config.sockets | default(omit) }}"
+        state: present
+        timeout: "{{ pve_config.timeout | default(1200) }}"
+
+    - name: Build VMs from survey
+      when: use_pve_survey | default(false)
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        api_user: "{{ proxmox_api_user }}"
+        clone: "{{ pve_survey_clone }}"
+        cores: "{{ pve_survey_cores | default(omit) }}"
+        memory: "{{ pve_survey_memory | default(omit) }}"
+        name: "{{ pve_survey_name }}"
+        nameservers: "{{ pve_survey_nameservers | default(omit) }}"
+        node: "{{ pve_survey_node }}"
+        sockets: "{{ pve_survey_sockets | default(omit) }}"
+        state: present
+        timeout: "{{ pve_survey_timeout | default(1200) }}"
