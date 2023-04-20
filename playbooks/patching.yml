@@ -1,7 +1,10 @@
 ---
 - name: Patch windows server
-  hosts: all
+  hosts: windows
   gather_facts: true
+
+  vars:
+    skip_install: true
 
   tasks:
     - name: Report Ansible Facts

@@ -1,0 +1,12 @@
+---
+- name: Ping windows server
+  hosts: windows
+  gather_facts: true
+
+  tasks:
+    - name: Report Ansible Facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - name: Ping server
+      ansible.builtin.win_ping:
