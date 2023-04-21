@@ -16,7 +16,7 @@ Role Variables
 | patch_categories | \['SecurityUpdates', 'CriticalUpdates', 'UpdateRollups'\] |
 | patch_kbs | \[ \] |
 | patch_failed_report | true |
-| patch_failed_report_dest | C:\\ansible_failed_updates.txt |
+| patch_report_dest_dir | %Temp% |
 
 Example Playbook
 ----------------

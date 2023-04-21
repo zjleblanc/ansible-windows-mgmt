@@ -13,13 +13,6 @@
           - proxmox_api_token_secret is defined
         fail_msg: "Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]"
 
-    - name: Ensure required python modules
-      ansible.builtin.pip:
-        name: 
-          - proxmoxer>=2.0.1
-          - requests>=2.28.2
-        state: present
-
     - name: Build VMs via defined configs
       when: proxmox_ve_configs is defined
       loop: "{{ proxmox_ve_configs }}"
@@ -100,7 +93,6 @@
         tdf: "{{ pve_config.tdf | default(omit) }}"
         template: "{{ pve_config.template | default(omit) }}"
         timeout: "{{ pve_config.timeout | default(1200) }}"
-        update: "{{ pve_config.update | default(omit) }}"
         validate_certs: "{{ pve_config.validate_certs | default(omit) }}"
         vcpus: "{{ pve_config.vcpus | default(omit) }}"
         vga: "{{ pve_config.vga | default(omit) }}"

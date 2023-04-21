@@ -1,2 +1,3 @@
 ---
 patch_allow_reboot: true
+patch_report_dest_dir: "%Temp%"

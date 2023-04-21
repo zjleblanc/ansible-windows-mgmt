@@ -5,4 +5,3 @@ patch_categories:
   - UpdateRollups
 
 patch_failed_report: true
-patch_failed_report_dest: "C:\\ansible_failed_updates.txt"

@@ -5,14 +5,14 @@
     category_names: "{{ patch_categories }}"
     accept_list: "{{ patch_kbs | default(omit) }}"
     state: searched
-    
+
 - name: Publish search report
   when: skip_install
-  delegate_to: raspi
+  delegate_to: raspi # my report server
   block:
     - name: Create report location if it does not exist
       ansible.builtin.file:
-        path: "{{ report_dest_dir }}"
+        path: "{{ patch_report_dest_dir }}"
         state: directory
         mode: '0755'
 
@@ -23,7 +23,7 @@
         filtered_list: "{{ r_searched.filtered_updates | dict2items }}"
       ansible.builtin.template:
         src: search_report.html.j2
-        dest: "{{ report_dest_dir }}/{{ inventory_hostname }}_patch_report.html"
+        dest: "{{ patch_report_dest_dir }}/{{ inventory_hostname }}_patch_report.html"
         mode: '0644'
 
 - name: Install updates
@@ -36,10 +36,11 @@
     state: installed
 
 - name: Report any failed updates
+  delegate_to: raspi # my report server
   when:
     - not skip_install
     - patch_failed_report
     - r_installed.failed_update_count
   ansible.builtin.template:
     src: failed_report.txt.j2
-    dest: "{{ report_dest_dir }}"
+    dest: "{{ patch_report_dest_dir }}/{{ inventory_hostname }}_patch_failed_report.txt"
