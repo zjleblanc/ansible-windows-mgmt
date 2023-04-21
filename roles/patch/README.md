@@ -24,6 +24,11 @@ Example Playbook
   - name: Patch server
     include_role: patch
 
+  - name: Patch server (just search and report - similar to check mode)
+    include_role: patch
+    vars:
+      skip_install: true
+
   - name: Patch server (turn off reporting)
     include_role: patch
     vars:
