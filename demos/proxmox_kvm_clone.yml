@@ -4,36 +4,19 @@
   gather_facts: false
 
   tasks:
-    # - name: Assert required proxmox creds
-    #   ansible.builtin.assert:
-    #     that:
-    #       - proxmox_api_host is defined
-    #       - proxmox_api_user is defined
-    #       - proxmox_api_token_id is defined
-    #       - proxmox_api_token_secret is defined
-    #     fail_msg: "Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]"
+    - name: Assert required proxmox creds
+      ansible.builtin.assert:
+        that:
+          - proxmox_api_host is defined
+          - proxmox_api_user is defined
+          - proxmox_api_token_id is defined
+          - proxmox_api_token_secret is defined
+        fail_msg: "Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]"
 
-    # - name: Build VMs via defined configs
-    #   when: proxmox_ve_configs is defined
-    #   loop: "{{ proxmox_ve_configs }}"
-    #   loop_control:
-    #     loop_var: pve_config
-    #   include_role: 
-    #     name: proxmox_kvm
-
-  - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
-    community.windows.psexec:
-      hostname: 192.168.0.237
-      connection_username: "{{ proxmox_default_user }}"
-      connection_password: "{{ proxmox_default_password }}"
-      encrypt: yes
-      executable: powershell.exe
-      arguments: '-'
-      stdin: |
-        $ErrorActionPreference = "Stop"
-        $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
-        $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
-        [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
-        $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-        Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
-        exit
+    - name: Build VMs via defined configs
+      when: proxmox_ve_configs is defined
+      loop: "{{ proxmox_ve_configs }}"
+      loop_control:
+        loop_var: pve_config
+      include_role: 
+        name: proxmox_kvm

@@ -110,7 +110,27 @@
   ansible.builtin.set_fact:
     net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
 
+- name: Add host to proxmox inventory
+  ansible.controller.host:
+    name: "{{ pve_config.name }}"
+    description: "Created by ansible"
+    inventory: "Proxmox Inventory"
+    state: present
+    variables:
+      ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
+      ansible_user: "{{ Administrator }}"
+
+- name: Add host to needs_winrm group
+  ansible.controller.group:
+    name: needs_winrm
+    description: "Windows VM without winrm configured"
+    inventory: Proxmox Inventory
+    hosts:
+      - "{{ pve_config.name }}"
+    preserve_existing_hosts: true
+
 - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+  when: configure_winrm | default(false)
   community.windows.psexec:
     hostname: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
     connection_username: "{{ proxmox_default_user }}"
