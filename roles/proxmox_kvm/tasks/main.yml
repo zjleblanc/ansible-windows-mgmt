@@ -111,7 +111,7 @@
     net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
 
 - name: Debug
-  ansible.builtin.shell: curl controller.autodotes.com
+  ansible.builtin.shell: curl https://controller.autodotes.com
   register: r_curl
 
 - name: Print
