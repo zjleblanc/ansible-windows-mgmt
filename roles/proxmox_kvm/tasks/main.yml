@@ -127,7 +127,12 @@
     inventory: Proxmox Inventory
     hosts:
       - "{{ pve_config.name }}"
-    preserve_existing_hosts: True
+
+- name: Get needs_winrm group
+  register: r_winrm_group
+  ansible.controller.group:
+    name: needs_winrm
+    inventory: Proxmox Inventory
 
 - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
   when: configure_winrm | default(false)
