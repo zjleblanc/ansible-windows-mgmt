@@ -110,6 +110,14 @@
   ansible.builtin.set_fact:
     net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
 
+- name: Debug
+  ansible.builtin.shell: dig controller.autodotes.com
+  register: r_dig
+
+- name: Print
+  ansible.builtin.debug:
+    var: r_dig
+
 - name: Add host to proxmox inventory
   ansible.controller.host:
     name: "{{ pve_config.name }}"
@@ -119,7 +127,6 @@
     variables:
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
       ansible_user: "{{ proxmox_default_user }}"
-    validate_certs: true
 
 - name: Add host to needs_winrm group
   ansible.controller.group:
@@ -129,7 +136,6 @@
     hosts:
       - "{{ pve_config.name }}"
     preserve_existing_hosts: true
-    validate_certs: true
 
 - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
   when: configure_winrm | default(false)
