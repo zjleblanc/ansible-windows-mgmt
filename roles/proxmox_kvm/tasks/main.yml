@@ -119,6 +119,7 @@
     variables:
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
       ansible_user: "{{ proxmox_default_user }}"
+    verify_ssl: true
 
 - name: Add host to needs_winrm group
   awx.awx.group:
