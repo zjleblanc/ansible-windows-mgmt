@@ -5,6 +5,7 @@
 
   tasks:
   - name: Ensure pypsexec exists
+    delegate_to: localhost
     ansible.builtin.pip:
       name: pypsexec
       state: present
