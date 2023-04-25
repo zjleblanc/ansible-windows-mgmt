@@ -130,10 +130,10 @@
 - name: Check for existing hosts
   register: r_winrm_group_hosts
   uri:
-    url: "{{ controller_host }}/api/v2/groups/{{ r_winrm_group.id }}/all_hosts"
+    url: "{{ lookup('env', 'CONTROLLER_HOST') }}/api/v2/groups/{{ r_winrm_group.id }}/all_hosts"
     method: GET
     headers:
-      Authorization: "Bearer {{ controller_oauthtoken }}"
+      Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
 
 - name: Add host to needs_winrm group
   ansible.controller.group:
