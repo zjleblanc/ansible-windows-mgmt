@@ -111,7 +111,7 @@
     net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
 
 - name: Add host to proxmox inventory
-  ansible.controller.tower_host:
+  awx.awx.host:
     name: "{{ pve_config.name }}"
     description: "Created by ansible"
     inventory: "Proxmox Inventory"
@@ -121,7 +121,7 @@
       ansible_user: "{{ proxmox_default_user }}"
 
 - name: Add host to needs_winrm group
-  ansible.controller.group:
+  awx.awx.group:
     name: needs_winrm
     description: "Windows VM without winrm configured"
     inventory: Proxmox Inventory
