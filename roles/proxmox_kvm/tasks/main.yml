@@ -111,12 +111,12 @@
     net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
 
 - name: Debug
-  ansible.builtin.shell: dig controller.autodotes.com
-  register: r_dig
+  ansible.builtin.shell: curl controller.autodotes.com
+  register: r_curl
 
 - name: Print
   ansible.builtin.debug:
-    var: r_dig
+    var: r_curl
 
 - name: Add host to proxmox inventory
   ansible.controller.host:
