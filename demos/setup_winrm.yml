@@ -16,7 +16,7 @@
   - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
     delegate_to: localhost
     community.windows.psexec:
-      hostname: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+      hostname: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
       connection_username: "{{ proxmox_default_user }}"
       connection_password: "{{ proxmox_default_password }}"
       encrypt: yes
