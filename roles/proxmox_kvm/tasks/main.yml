@@ -120,6 +120,21 @@
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
       ansible_user: "{{ proxmox_default_user }}"
 
+- name: Create needs_winrm group
+  register: r_winrm_group
+  ansible.controller.group:
+    name: needs_winrm
+    description: Windows VM without winrm configured
+    inventory: Proxmox Inventory
+
+- name: Check for existing hosts
+  register: r_winrm_group_hosts
+  uri:
+    url: "{{ controller_host }}/api/v2/groups/{{ r_winrm_group.id }}/all_hosts"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ controller_oauthtoken }}"
+
 - name: Add host to needs_winrm group
   ansible.controller.group:
     name: needs_winrm
@@ -127,12 +142,7 @@
     inventory: Proxmox Inventory
     hosts:
       - "{{ pve_config.name }}"
-
-- name: Get needs_winrm group
-  register: r_winrm_group
-  ansible.controller.group:
-    name: needs_winrm
-    inventory: Proxmox Inventory
+    preserve_existing_hosts: "{{ (r_winrm_group_hosts.json.results | length) > 0 }}"
 
 - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
   when: configure_winrm | default(false)
