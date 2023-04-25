@@ -1,0 +1,31 @@
+---
+- name: Setup winrm via psexec 
+  hosts: needs_winrm
+  gather_facts: false
+
+  tasks:
+  - name: Ensure pypsexec exists
+    ansible.builtin.pip:
+      name: pypsexec
+      state: present
+
+  # Windows target needs to have port 445 open
+  # netsh advfirewall firewall show rule name="Remote Event Log Management (NP-In)"
+  # netsh advfirewall firewall set rule name="Remote Event Log Management (NP-In)" new enable=yes
+  - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+    delegate_to: localhost
+    community.windows.psexec:
+      hostname: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+      connection_username: "{{ proxmox_default_user }}"
+      connection_password: "{{ proxmox_default_password }}"
+      encrypt: yes
+      executable: powershell.exe
+      arguments: '-'
+      stdin: |
+        $ErrorActionPreference = "Stop"
+        $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+        $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+        [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+        $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+        Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+        exit

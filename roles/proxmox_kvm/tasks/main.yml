@@ -1,0 +1,128 @@
+---
+- name: Provision kvm
+  register: r_kvm
+  community.general.proxmox_kvm:
+    api_host: "{{ proxmox_api_host }}"
+    api_token_id: "{{ proxmox_api_token_id }}"
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: "{{ proxmox_api_user }}"
+    acpi: "{{ pve_config.acpi | default(omit) }}"
+    agent: "{{ pve_config.agent | default(omit) }}"
+    archive: "{{ pve_config.archive | default(omit) }}"
+    args: "{{ pve_config.args | default(omit) }}"
+    autostart: "{{ pve_config.autostart | default(omit) }}"
+    balloon: "{{ pve_config.balloon | default(omit) }}"
+    bios: "{{ pve_config.bios | default(omit) }}"
+    boot: "{{ pve_config.boot | default(omit) }}"
+    clone: "{{ pve_config.clone }}"
+    cores: "{{ pve_config.cores | default(omit) }}"
+    cpu: "{{ pve_config.cpu | default(omit) }}"
+    cpulimit: "{{ pve_config.cpulimit | default(omit) }}"
+    cpuunits: "{{ pve_config.cpuunits | default(omit) }}"
+    delete: "{{ pve_config.delete | default(omit) }}"
+    description: "{{ pve_config.description | default(omit) }}"
+    digest: "{{ pve_config.digest | default(omit) }}"
+    efidisk0: "{{ pve_config.efidisk0 | default(omit) }}"
+    force: "{{ pve_config.force | default(omit) }}"
+    format: "{{ pve_config.format | default(omit) }}"
+    freeze: "{{ pve_config.freeze | default(omit) }}"
+    full: "{{ pve_config.full | default(omit) }}"
+    hostpci: "{{ pve_config.hostpci | default(omit) }}"
+    hotplug: "{{ pve_config.hotplug | default(omit) }}"
+    hugepages: "{{ pve_config.hugepages | default(omit) }}"
+    ide: "{{ pve_config.ide | default(omit) }}"
+    ipconfig: "{{ pve_config.ipconfig | default(omit) }}"
+    keyboard: "{{ pve_config.keyboard | default(omit) }}"
+    kvm: "{{ pve_config.kvm | default(omit) }}"
+    localtime: "{{ pve_config.localtime | default(omit) }}"
+    lock: "{{ pve_config.lock | default(omit) }}"
+    machine: "{{ pve_config.machine | default(omit) }}"
+    memory: "{{ pve_config.memory | default(omit) }}"
+    migrate_downtime: "{{ pve_config.migrate_downtime | default(omit) }}"
+    migrate_speed: "{{ pve_config.migrate_speed | default(omit) }}"
+    name: "{{ pve_config.name | default(omit) }}"
+    nameservers: "{{ pve_config.nameservers | default(omit) }}"
+    net: "{{ pve_config.net | default(omit) }}"
+    newid: "{{ pve_config.newid | default(omit) }}"
+    node: "{{ pve_config.node | default(omit) }}"
+    numa_enabled: "{{ pve_config.numa_enabled | default(omit) }}"
+    numa: "{{ pve_config.numa | default(omit) }}"
+    onboot: "{{ pve_config.onboot | default(omit) }}"
+    ostype: "{{ pve_config.ostype | default(omit) }}"
+    parallel: "{{ pve_config.parallel | default(omit) }}"
+    pool: "{{ pve_config.pool | default(omit) }}"
+    protection: "{{ pve_config.protection | default(omit) }}"
+    proxmox_default_behavior: "{{ pve_config.proxmox_default_behavior | default(omit) }}"
+    reboot: "{{ pve_config.reboot | default(omit) }}"
+    revert: "{{ pve_config.revert | default(omit) }}"
+    sata: "{{ pve_config.sata | default(omit) }}"
+    scsi: "{{ pve_config.scsi | default(omit) }}"
+    scsihw: "{{ pve_config.scsihw | default(omit) }}"
+    searchdomains: "{{ pve_config.searchdomains | default(omit) }}"
+    serial: "{{ pve_config.serial | default(omit) }}"
+    shares: "{{ pve_config.shares | default(omit) }}"
+    skiplock: "{{ pve_config.skiplock | default(omit) }}"
+    smbios: "{{ pve_config.smbios | default(omit) }}"
+    snapname: "{{ pve_config.snapname | default(omit) }}"
+    sockets: "{{ pve_config.sockets | default(omit) }}"
+    sshkeys: "{{ pve_config.sshkeys | default(omit) }}"
+    startdate: "{{ pve_config.startdate | default(omit) }}"
+    startup: "{{ pve_config.startup | default(omit) }}"
+    state: present
+    storage: "{{ pve_config.storage | default(omit) }}"
+    tablet: "{{ pve_config.tablet | default(omit) }}"
+    tags: "{{ pve_config.tags | default(omit) }}"
+    target: "{{ pve_config.target | default(omit) }}"
+    tdf: "{{ pve_config.tdf | default(omit) }}"
+    template: "{{ pve_config.template | default(omit) }}"
+    timeout: "{{ pve_config.timeout | default(1200) }}"
+    validate_certs: "{{ pve_config.validate_certs | default(omit) }}"
+    vcpus: "{{ pve_config.vcpus | default(omit) }}"
+    vga: "{{ pve_config.vga | default(omit) }}"
+    virtio: "{{ pve_config.virtio | default(omit) }}"
+    vmid: "{{ pve_config.vmid | default(omit) }}"
+    watchdog: "{{ pve_config.watchdog | default(omit) }}"
+
+- name: Start kvm
+  register: r_kvm_start
+  community.general.proxmox_kvm:
+    api_host: "{{ proxmox_api_host }}"
+    api_token_id: "{{ proxmox_api_token_id }}"
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: "{{ proxmox_api_user }}"
+    vmid: "{{ r_kvm.vmid }}"
+    state: started
+
+- name: Get agent network interfaces
+  register: r_kvm_net_interfaces
+  retries: 10
+  delay: 10
+  until: 
+    - r_kvm_net_interfaces.status == 200
+    - r_kvm_net_interfaces.json.data.result is pve_local_ip
+  ansible.builtin.uri:
+    url: "{{ proxmox_api_base_url }}/nodes/pve/qemu/{{ r_kvm.vmid }}/agent/network-get-interfaces"
+    method: GET
+    headers:
+      Authorization: "PVEAPIToken={{ proxmox_api_user }}!{{ proxmox_api_token_id }}={{ proxmox_api_token_secret }}"
+
+- name: Extract kvm ipv4 addresses
+  ansible.builtin.set_fact:
+    net_ipv4: "{{ r_kvm_net_interfaces.json.data.result[0]['ip-addresses'] | selectattr('ip-address-type', 'equalto', 'ipv4') | list }}"
+
+- name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+  community.windows.psexec:
+    hostname: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
+    connection_username: "{{ proxmox_default_user }}"
+    connection_password: "{{ proxmox_default_password }}"
+    encrypt: yes
+    executable: powershell.exe
+    arguments: '-'
+    stdin: |
+      $ErrorActionPreference = "Stop"
+      $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+      $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+      [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+      $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+      Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+      exit

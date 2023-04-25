@@ -1,0 +1,3 @@
+---
+# defaults file for proxmox_kvm
+proxmox_api_base_url: "https://{{ proxmox_api_host }}:8006/api2/json"
