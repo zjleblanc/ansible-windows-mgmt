@@ -118,7 +118,7 @@
     state: present
     variables:
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
-      ansible_user: "{{ Administrator }}"
+      ansible_user: "{{ proxmox_default_user }}"
 
 - name: Add host to needs_winrm group
   ansible.controller.group:
