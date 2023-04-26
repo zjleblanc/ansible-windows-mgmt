@@ -1,0 +1,15 @@
+---
+- name: Ping windows server
+  hosts: "{{ ansible_limit | default(omit) }}"
+  gather_facts: true
+
+  tasks:
+    - name: Ensure credssp available
+      ansible.builtin.pip:
+        name: requests-credssp
+      delegate_to: localhost
+      run_once: true
+
+    - name: Report Ansible Facts
+      ansible.builtin.debug:
+        var: ansible_facts
