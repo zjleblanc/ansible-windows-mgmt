@@ -119,7 +119,9 @@
     variables:
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
       ansible_user: "{{ proxmox_default_user }}"
+      ansible_connection: winrm
       ansible_winrm_transport: credssp
+      ansible_winrm_server_cert_validation: ignore
 
 - name: Create needs_winrm group
   register: r_winrm_group
