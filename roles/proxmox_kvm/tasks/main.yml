@@ -141,7 +141,6 @@
 - name: Add host to needs_winrm group
   ansible.controller.group:
     name: needs_winrm
-    description: "Windows VM without winrm configured"
     inventory: Proxmox Inventory
     hosts:
       - "{{ pve_config.name }}"

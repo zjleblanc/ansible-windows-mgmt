@@ -30,3 +30,19 @@
         $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
         Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
         exit
+
+  - name: Add host to windows group
+    ansible.builtin.include_tasks:
+      file: tasks/add_host_to_group.yml
+    vars:
+      group_name: windows
+      group_desc: Windows VMs in proxmox
+      group_inventory: Proxmox Inventory
+
+  - name: Remove host from needs_winrm group
+    ansible.builtin.include_tasks:
+      file: tasks/remove_host_from_group.yml
+    vars:
+      group_name: needs_winrm
+      group_inventory: Proxmox Inventory
+    
