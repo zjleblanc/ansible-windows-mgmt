@@ -17,7 +17,7 @@
     url: "{{ lookup('env', 'CONTROLLER_HOST') }}/api/v2/groups/{{ r_group_details.id }}/hosts/"
     method: POST
     body:
-      id: "{{ r_host_details.id }}"
+      id: "{{ r_host_details.id | int }}"
       disassociate: true    
     body_format: json  
     headers:
