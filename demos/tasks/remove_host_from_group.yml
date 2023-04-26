@@ -24,3 +24,4 @@
     body_format: json  
     headers:
       Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
+    status_code: [200,204]
