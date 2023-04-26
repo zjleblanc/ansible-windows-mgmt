@@ -32,6 +32,7 @@
         exit
 
   - name: Add host to windows group
+    delegate_to: localhost
     ansible.builtin.include_tasks:
       file: tasks/add_host_to_group.yml
     vars:
@@ -40,6 +41,7 @@
       group_inventory: Proxmox Inventory
 
   - name: Remove host from needs_winrm group
+    delegate_to: localhost
     ansible.builtin.include_tasks:
       file: tasks/remove_host_from_group.yml
     vars:
