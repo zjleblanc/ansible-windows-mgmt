@@ -18,7 +18,7 @@
     method: POST
     body: >
       {
-        "id": {{ r_host_details.id | int }}
+        "id": {{ r_host_details.id | int }},
         "disassociate": true
       }    
     body_format: json  
