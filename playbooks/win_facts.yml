@@ -1,12 +1,22 @@
 ---
 - name: Ping windows server
   hosts: "{{ ansible_limit | default(omit) }}"
-  gather_facts: false
+  gather_facts: true
 
   tasks:
-    - name: Gather facts
-      ansible.builtin.setup:
+    - name: Join Autodotes domain
+      when: join_domain | default(false)
+      block:
+        - name: Configure name servers
+          ansible.builtin.win_shell: |
+            Set-DnsClientServerAddress -InterfaceIndex 6 -ServerAddresses ("{{ hostvars['dc01']['ansible_host'] }}","192.168.0.1")
 
-    - name: Report Ansible Facts
-      ansible.builtin.debug:
-        var: ansible_facts
+        - name: Join autodotes.local domain
+          register: r_domain_membership
+          ansible.windows.win_domain_membership:
+            dns_domain_name: "{{ win_domain }}"
+            hostname: "{{ inventory_hostname }}"
+            domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
+            domain_admin_password: "{{ win_domain_admin_password }}"
+            domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+            state: domain
