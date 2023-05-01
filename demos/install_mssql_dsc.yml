@@ -7,10 +7,12 @@
     - "{{ playbook_dir }}/local_vars/mssql_vars.yml"
 
   tasks:
-    - name: Install package provider
+    - name: Set up PowerShell for fetching modules
       tags: prereqs
       ansible.builtin.win_shell: |
         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+        Install-Module PowerShellGet -AllowClobber -Force
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
     - name: Install required powershell modules
       tags: prereqs
@@ -31,7 +33,6 @@
         required_version: "{{ module.required_version | default(omit) }}"
         state: present
         accept_license: "{{ module.accept_license | default(omit) }}"
-        skip_publisher_check: true
 
     - name: Install required features
       tags: prereqs
