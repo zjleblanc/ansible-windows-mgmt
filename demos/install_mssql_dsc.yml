@@ -1,6 +1,6 @@
 ---
 - name: Install SQL Server on Window host
-  hosts: win11-guest-2
+  hosts: "{{ ansible_limit | default(omit) }}"
   gather_facts: false
 
   vars_files:
