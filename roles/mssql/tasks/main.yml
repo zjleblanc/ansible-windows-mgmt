@@ -168,8 +168,8 @@
     Program: sqlservr.exe 
     Ensure: present
     Enabled: True
-    Profile: "Domain"
-    Direction: "Inbound"
+    Profile: "{{ mssql_profiles_allowed }}"
+    Direction: Inbound
     Action: Allow
     Description: "Allows the Database Engine to access the network"
 
@@ -183,8 +183,8 @@
     Service: SQLBrowser
     Ensure: present
     Enabled: True
-    Profile: "Domain"
-    Direction: "Inbound"
+    Profile: "{{ mssql_profiles_allowed }}"
+    Direction: Inbound
     Action: Allow
     Description: "Allows the SQL Server Browser to access the network"  
 

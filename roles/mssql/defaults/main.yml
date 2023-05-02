@@ -116,6 +116,11 @@ mssql_sa_password: "{{ mssql_sqlsvc_account_pass }}"
 
 mssql_features: SQLENGINE,AS
 
+# Firewall
+mssql_profiles_allowed:
+  - Private
+  - Domain
+
 # Collation
 mssql_collation: SQL_Latin1_General_CP1_CI_AS
 
