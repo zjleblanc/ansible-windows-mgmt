@@ -118,6 +118,10 @@
 
 - meta: flush_handlers
 
+- name: Wait for host to respond (600s)
+  tags: install
+  ansible.builtin.wait_for_connection:
+
 - name: Install SQL Server
   tags: install
   ansible.windows.win_dsc:
