@@ -271,8 +271,8 @@
     - test_sql
   register: r_test_sql
   ansible.windows.win_shell: >
-    Invoke-SqlCmd -Query "SELECT * FROM sys.tcp_endpoints;"
-      -Server "{{ inventory_hostname }}\{{ mssql_instance_name }}"
+    Invoke-SqlCmd -Query "SELECT GETDATE() AS TimeOfQuery"
+      -Server "{{ hostvars[inventory_hostname]['ansible_host'] }}"
       -TrustServerCertificate
 
 - name: Print SQL output
