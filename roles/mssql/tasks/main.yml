@@ -1,5 +1,6 @@
 ---
 - name: Assert credentials provided
+  tags: always
   ansible.builtin.assert:
     that:
       - mssql_sqlsvc_account_pass is defined
@@ -7,6 +8,7 @@
       - mssql_assvc_account_pass is defined
 
 - name: Assert domain controller is defined in inventory
+  tags: always
   ansible.builtin.assert:
     that: domain_controller in hostvars
 
@@ -166,34 +168,43 @@
   tags:
     - configure 
     - configure_firewall
-  ansible.windows.win_dsc:
-    resource_name: xFirewall
-    Name: "SQL Server Database Engine instance {{ mssql_instance_name }}"
-    Program: sqlservr.exe 
-    Ensure: present
-    Enabled: True
-    Profile: "{{ mssql_profiles_allowed }}"
-    Direction: Inbound
-    Action: Allow
-    Description: "Allows the Database Engine to access the network"
+  community.windows.win_firewall_rule:
+    name: "SQL Server Database Engine instance {{ mssql_instance_name }}"
+    description: Allows the Database Engine to access the network
+    localport: 1433
+    action: allow
+    direction: in
+    protocol: tcp
+    state: present
+    enabled: yes
 
 - name: Firewall // Allow SQLBrowser for instance
   tags:
-    - configure
+    - configure 
     - configure_firewall
-  ansible.windows.win_dsc:
-    resource_name: xFirewall
-    Name: "SQL Server Browser instance {{ mssql_instance_name }}"
-    Service: SQLBrowser
-    Ensure: present
-    Enabled: True
-    Profile: "{{ mssql_profiles_allowed }}"
-    Direction: Inbound
-    Action: Allow
-    Description: "Allows the SQL Server Browser to access the network"  
+  community.windows.win_firewall_rule:
+    name: "SQL Server Browser instance {{ mssql_instance_name }}"
+    description: Allows the SQL Server Browser to access the network
+    localport: 1434
+    action: allow
+    direction: in
+    protocol: udp
+    state: present
+    enabled: yes
 
 - name: Begin SQL Server configuration
   block: 
+  - name: Listen on all addresses
+    tags:
+      - configure
+      - configure_sql_firewall
+    ansible.windows.win_dsc:
+      resource_name: SqlProtocol
+      InstanceName: "{{ mssql_instance_name }}"
+      ProtocolName: TcpIp
+      ListenOnAllIpAddresses: True
+      Enabled: True
+
   - name: Enable TCP Connectivity
     tags:
       - configure
