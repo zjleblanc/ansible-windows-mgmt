@@ -256,6 +256,9 @@
 
 - name: "Ensure {{ domain_controller }} has SqlServer module"
   delegate_to: "{{ domain_controller }}"
+  tags:
+    - test
+    - test_sql
   community.windows.win_psmodule:
     name: SqlServer
     state: present
