@@ -5,6 +5,7 @@
 
   tasks:
     - name: Install MSSQL using DSC
+      tags: always
       ansible.builtin.include_role:
         name: mssql
       vars:

@@ -2,7 +2,7 @@
 - name: reboot windows
   when: not mssql_suppress_reboot
   ansible.windows.win_reboot:
-    reboot_timeout: 3600
+    reboot_timeout: 7200
     post_reboot_delay: 60
 
 - name: restart sqlagent

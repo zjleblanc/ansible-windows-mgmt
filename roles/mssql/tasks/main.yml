@@ -113,12 +113,10 @@
 
 - name: Extract installation media
   tags: fetch_media
+  notify: reboot windows
   ansible.windows.win_shell: "{{ mssql_installation_path }}\\SQLServer{{ mssql_version }}-DEV-x64-ENU.exe /X:{{ mssql_installation_path }}\\Media /Q"
 
-- name: reboot before install
-  ansible.windows.win_reboot:
-    reboot_timeout: 7200
-    post_reboot_delay: 60
+- meta: flush_handlers
 
 - name: Install SQL Server
   tags: install
