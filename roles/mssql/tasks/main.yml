@@ -255,14 +255,14 @@
       OptionValue: "{{ mssql_max_degree_of_parallelism }}"
 
 - name: Test connection with SQL query
+  delegate_to: "{{ domain_controller }}"
   tags:
     - test
     - test_sql
   register: r_test_sql
   ansible.windows.win_shell: >
-    Invoke-SqlCmd -Query "SELECT * FROM sys.tcp_endpoints;" 
-      -Username "{{ win_domain_admin  }}@{{ win_domain }}" 
-      -Password "{{ win_domain_admin_password }}" 
+    Invoke-SqlCmd -Query "SELECT * FROM sys.tcp_endpoints;"
+      -Server "{{ inventory_hostname }}\{{ mssql_instance_name }}"
       -TrustServerCertificate
 
 - name: Print SQL output
