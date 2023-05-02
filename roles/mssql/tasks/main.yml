@@ -261,8 +261,8 @@
   register: r_test_sql
   ansible.windows.win_shell: >
     Invoke-SqlCmd -Query "SELECT * FROM sys.tcp_endpoints;" 
-      -Username "{{ mssql_sqlsvc_account  }}" 
-      -Password "{{ mssql_sqlsvc_account_pass }}" 
+      -Username "{{ win_domain_admin  }}@{{ win_domain }}" 
+      -Password "{{ win_domain_admin_password }}" 
       -TrustServerCertificate
 
 - name: Print SQL output
