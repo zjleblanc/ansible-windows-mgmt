@@ -54,6 +54,7 @@ Role Variables
 | mssql_asadmin_accounts | ✅ | {{ mssql_sysadmin_accounts }} |
 | mssql_max_degree_of_parallelism | ✅ | 0 |
 | mssql_min_server_memory | ✅ | 0 |
+| mssql_profiles_allowed | ✅ | ['Private', 'Domain', 'Public'] |
 
 Handlers
 --------------
