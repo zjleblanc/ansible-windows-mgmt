@@ -254,7 +254,14 @@
       OptionName: max degree of parallelism
       OptionValue: "{{ mssql_max_degree_of_parallelism }}"
 
-- name: Test connection with SQL query
+- name: "Ensure {{ domain_controller }} has SqlServer module"
+  delegate_to: "{{ domain_controller }}"
+  community.windows.win_psmodule:
+    name: SqlServer
+    state: present
+    accept_license: true
+
+- name: "Test connection with SQL query from {{ domain_controller }}"
   delegate_to: "{{ domain_controller }}"
   tags:
     - test
@@ -266,6 +273,7 @@
       -TrustServerCertificate
 
 - name: Print SQL output
+  delegate_to: localhost
   tags:
     - test
     - test_sql
