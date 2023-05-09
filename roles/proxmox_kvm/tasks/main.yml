@@ -112,7 +112,7 @@
 
 - name: Add host to proxmox inventory
   ansible.controller.host:
-    name: "{{ pve_config.name }}"
+    name: "{{ pve_config.name }}.AUTODOTES.LOCAL"
     description: "Created by ansible"
     inventory: "Proxmox Inventory"
     state: present
