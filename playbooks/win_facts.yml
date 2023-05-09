@@ -6,6 +6,7 @@
   tasks:
     - name: Join Autodotes domain
       when: join_domain | default(false)
+      throttle: 1
       block:
         - name: Configure name servers
           ansible.builtin.win_shell: |
@@ -13,7 +14,6 @@
 
         - name: Join autodotes.local domain
           register: r_domain_membership
-          throttle: 1
           ansible.windows.win_domain_membership:
             dns_domain_name: "{{ win_domain }}"
             hostname: "{{ inventory_hostname.split('.')[0] }}"
