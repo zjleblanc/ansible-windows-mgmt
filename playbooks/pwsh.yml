@@ -12,7 +12,7 @@
       $ver = $PSVersionTable
       return $PSVersionTable.PSVersion.Major
     args:
-      executable: pwsh
+      executable: /usr/bin/pwsh
     register: ps_major_version
     delegate_to: localhost
     
