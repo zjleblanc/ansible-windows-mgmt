@@ -10,6 +10,7 @@
         name: mssql
       vars:
         netbios: AUTODOTES
+        domain_controller: dc01.AUTODOTES.LOCAL
         mssql_base_ldap_path: "OU=Users,OU=lab,DN=autodotes,DN=local"
 
         ### From custom credential ###

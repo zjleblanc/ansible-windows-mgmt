@@ -9,7 +9,7 @@
       block:
         - name: Configure name servers
           ansible.builtin.win_shell: |
-            Set-DnsClientServerAddress -InterfaceIndex 6 -ServerAddresses ("{{ hostvars['dc01']['ansible_host'] }}","192.168.0.1")
+            Set-DnsClientServerAddress -InterfaceIndex 6 -ServerAddresses ("{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}","192.168.0.1")
 
         - name: Join autodotes.local domain
           register: r_domain_membership
