@@ -20,3 +20,13 @@
             domain_admin_password: "{{ win_domain_admin_password }}"
             domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
             state: domain
+
+        - name: Remove host vars to use windows group vars
+          ansible.controller.host:
+            name: "{{ inventory_hostname }}"
+            inventory: "Proxmox Inventory"
+            state: present
+            variables: 
+              domain_name: "{{ win_domain }}"
+              domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
+              domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
