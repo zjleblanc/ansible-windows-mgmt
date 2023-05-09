@@ -23,6 +23,7 @@
             state: domain
 
         - name: Remove host vars to use windows group vars
+          delegate_to: localhost
           ansible.controller.host:
             name: "{{ inventory_hostname }}"
             inventory: "Proxmox Inventory"
