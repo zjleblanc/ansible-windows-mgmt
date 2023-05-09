@@ -143,7 +143,7 @@
     name: needs_winrm
     inventory: Proxmox Inventory
     hosts:
-      - "{{ pve_config.name }}"
+      - "{{ pve_config.name }}.{{ proxmox_kvm_domain }}"
     preserve_existing_hosts: "{{ (r_winrm_group_hosts.json.results | length) > 0 }}"
 
 - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
