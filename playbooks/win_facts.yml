@@ -21,6 +21,11 @@
             domain_admin_password: "{{ win_domain_admin_password }}"
             domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
             state: domain
+        
+        - name: Reboot to complete domain join
+          ansible.builtin.win_reboot:
+            reboot_timeout: 7200
+            post_reboot_delay: 30
 
         - name: Remove host vars to use windows group vars
           delegate_to: localhost
