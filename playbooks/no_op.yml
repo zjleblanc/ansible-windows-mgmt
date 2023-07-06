@@ -1,0 +1,9 @@
+---
+- name: No-op logging playbook
+  hosts: "{{ _hosts | default(omit) }}"
+  gather_facts: false
+
+  tasks:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: "{{ _msg | default('No message provided') }}"
