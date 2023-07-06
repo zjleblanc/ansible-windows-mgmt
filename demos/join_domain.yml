@@ -1,0 +1,42 @@
+---
+- name: Join windows server to domain
+  hosts: "{{ ansible_limit | default(omit) }}"
+  gather_facts: true
+
+  vars:
+    domain_controller: dc01.AUTODOTES.LOCAL
+
+  tasks:
+    - name: Join Autodotes domain
+      when: join_domain | default(false)
+      throttle: 1
+      block:
+        - name: Configure name servers
+          ansible.builtin.win_shell: |
+            Set-DnsClientServerAddress -InterfaceIndex 6 -ServerAddresses ("{{ hostvars[domain_controller]['ansible_host'] }}","192.168.0.1")
+
+        - name: Join autodotes.local domain
+          register: r_domain_membership
+          ansible.windows.win_domain_membership:
+            dns_domain_name: "{{ win_domain }}"
+            hostname: "{{ inventory_hostname.split('.')[0] }}"
+            domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
+            domain_admin_password: "{{ win_domain_admin_password }}"
+            domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+            state: domain
+        
+        - name: Reboot to complete domain join
+          ansible.builtin.win_reboot:
+            reboot_timeout: 7200
+            post_reboot_delay: 30
+
+        - name: Remove host vars to use windows group vars
+          delegate_to: localhost
+          ansible.controller.host:
+            name: "{{ inventory_hostname }}"
+            inventory: "Proxmox Inventory"
+            state: present
+            variables: 
+              domain_name: "{{ win_domain }}"
+              domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
+              domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
