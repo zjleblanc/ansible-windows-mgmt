@@ -1,8 +1,7 @@
 .venv/
+.vscode/
+ansible.cfg
 demos/local_vars/
 
-ansible.cfg
-
 **/__pycache__/**
-
 **/.DS_Store
