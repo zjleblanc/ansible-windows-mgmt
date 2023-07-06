@@ -1,4 +1,4 @@
----
-collections:
-  - name: ansible.controller
-    version: ">=4.3.0"
+# ---
+# collections:
+#   - name: ansible.controller
+#     version: ">=4.3.0"
