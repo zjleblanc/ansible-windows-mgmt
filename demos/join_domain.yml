@@ -36,6 +36,7 @@
             name: "{{ inventory_hostname }}"
             inventory: "Proxmox Inventory"
             state: present
+            enabled: true
             variables: 
               domain_name: "{{ win_domain }}"
               domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
