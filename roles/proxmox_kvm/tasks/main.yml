@@ -116,6 +116,7 @@
     description: "Created by ansible"
     inventory: "Proxmox Inventory"
     state: present
+    enabled: true
     variables:
       ansible_host: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
       ansible_user: "{{ proxmox_default_user }}"
