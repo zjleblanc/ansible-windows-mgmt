@@ -47,6 +47,7 @@
       group_inventory: Proxmox Inventory
 
   - name: Enable host in proxmox inventory
+    delegate_to: localhost
     ansible.controller.host:
       name: "{{ inventory_hostname }}"
       inventory: "Proxmox Inventory"
