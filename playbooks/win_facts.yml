@@ -6,4 +6,4 @@
   tasks:
     - name: Print facts
       ansible.builtin.debug:
-        msg: "{{ ansible_facts[inventory_hostname] }}"
+        msg: "{{ hostvars[inventory_hostname] }}"
