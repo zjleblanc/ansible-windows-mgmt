@@ -45,4 +45,11 @@
     vars:
       group_name: needs_winrm
       group_inventory: Proxmox Inventory
+
+  - name: Enable host in proxmox inventory
+    ansible.controller.host:
+      name: "{{ inventory_hostname }}"
+      inventory: "Proxmox Inventory"
+      state: present
+      enabled: true
     
