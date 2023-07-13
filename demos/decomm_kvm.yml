@@ -6,7 +6,7 @@
   tasks:
     - name: Add note | init decomm
       delegate_to: localhost
-      servicenow.itsm.api_info:
+      servicenow.itsm.api:
         resource: sc_req_item
         sys_id: "{{ sys_id }}"
         action: patch
@@ -15,7 +15,7 @@
 
     - name: Add note | interface facts
       delegate_to: localhost
-      servicenow.itsm.api_info:
+      servicenow.itsm.api:
         resource: sc_req_item
         sys_id: "{{ sys_id }}"
         action: patch
