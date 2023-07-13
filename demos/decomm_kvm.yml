@@ -20,4 +20,4 @@
         sys_id: "{{ sys_id }}"
         action: patch
         data:
-          work_notes: "{{ (hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json).replace(' ','&nbsp;') }}"    
+          work_notes: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"    
