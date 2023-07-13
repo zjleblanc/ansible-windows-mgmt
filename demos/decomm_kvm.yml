@@ -1,0 +1,13 @@
+---
+- name: Decommission a Proxmox Windows VM
+  hosts: "{{ _hosts | default(omit) }}"
+  gather_facts: false
+
+  tasks:
+    - name: Print ServiceNow information
+      ansible.builtin.debug:
+        msg: |
+          Message: {{ _msg }}
+          RITM: {{ ritm }}
+          Category Item: {{ cat_item }}
+          Requested For: {{ requested_for }}
