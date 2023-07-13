@@ -13,6 +13,7 @@
           Requested For: {{ requested_for }}
 
     - name: Get requested item
+      delegate_to: localhost
       register: r_req_item
       servicenow.itsm.api_info:
         resource: sc_req_item
