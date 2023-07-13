@@ -11,7 +11,7 @@
         sys_id: "{{ sys_id }}"
         action: patch
         data:
-          work_notes: "Beginning decomm process for {{ inventory_hostname }}"
+          comments: "Beginning decomm process for {{ inventory_hostname }}"
 
     - name: Add note | interface facts
       delegate_to: localhost
@@ -20,4 +20,4 @@
         sys_id: "{{ sys_id }}"
         action: patch
         data:
-          work_notes: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"    
+          comments: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"    
