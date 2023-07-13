@@ -19,6 +19,7 @@
               - 192.168.0.1
 
         - name: Remove legacy dns entries
+          delegate_to: "{{ domain_controller }}"
           register: r_dns_entry
           loop: ['A','AAAA']
           loop_control:
@@ -30,10 +31,10 @@
             state: absent
 
         - name: Remove legacy object from domain
+          delegate_to: "{{ domain_controller }}"
           community.windows.win_domain_computer:
             name: "{{ inventory_hostname.split('.')[0] }}"
             state: absent
-          delegate_to: my_windows_bridge.my_org.local
 
         - name: Join autodotes.local domain
           register: r_domain_membership
