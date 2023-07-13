@@ -18,6 +18,17 @@
               - "{{ hostvars[domain_controller]['ansible_host'] }}"
               - 192.168.0.1
 
+        - name: Clean up potential dns entries
+          register: r_dns_entry
+          loop: ['A','AAAA']
+          loop_control:
+            loop_var: type
+          community.windows.win_dns_record:
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            type: "{{ type }}"
+            zone: "{{ domain_name }}"
+            state: absent
+
         - name: Join autodotes.local domain
           register: r_domain_membership
           retries: 3
