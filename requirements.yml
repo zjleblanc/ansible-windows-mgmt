@@ -7,3 +7,4 @@ collections:
   - name: awx.awx
     version: 21.11.0
   - name: ansible.controller
+  - name: servicenow.itsm
