@@ -13,7 +13,7 @@
       block:
         - name: Configure domain controller as nameserver
           ansible.windows.win_dns_client:
-            adapter_names: Ethernet
+            adapter_names: Ethernet*
             dns_servers: 
               - "{{ hostvars[domain_controller]['ansible_host'] }}"
               - 192.168.0.1
