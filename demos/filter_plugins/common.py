@@ -4,4 +4,4 @@ class FilterModule(object):
         return { "codify": self.do_codify }
 
     def do_codify(self, content):
-        return '[code]<pre>' + content + '</pre>[/code]'
+        return '[code]<pre>' + content.replace('\n','<br>') + '</pre>[/code]'
