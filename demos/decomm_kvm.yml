@@ -1,24 +1,23 @@
 ---
 - name: Decommission a Proxmox Windows VM
   hosts: "{{ _hosts | default(omit) }}"
-  gather_facts: false
+  gather_facts: true
 
   tasks:
-    - name: Print ServiceNow information
-      ansible.builtin.debug:
-        msg: |
-          Message: {{ _msg }}
-          RITM: {{ ritm }}
-          Category Item: {{ cat_item }}
-          Requested For: {{ requested_for }}
-
-    - name: Get requested item
+    - name: Add note | init decomm
       delegate_to: localhost
-      register: r_req_item
       servicenow.itsm.api_info:
         resource: sc_req_item
         sys_id: "{{ sys_id }}"
+        action: patch
+        data:
+          work_notes: "Beginning decomm process for {{ inventory_hostname }}"
 
-    - name: Print results
-      debug:
-        var: r_req_item
+    - name: Add note | interface facts
+      delegate_to: localhost
+      servicenow.itsm.api_info:
+        resource: sc_req_item
+        sys_id: "{{ sys_id }}"
+        action: patch
+        data:
+          work_notes: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json }}"    
