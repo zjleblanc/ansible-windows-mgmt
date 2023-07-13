@@ -22,6 +22,7 @@
           register: r_domain_membership
           retries: 3
           delay: 20
+          until: r_domain_membership | success
           ansible.windows.win_domain_membership:
             dns_domain_name: "{{ win_domain }}"
             hostname: "{{ inventory_hostname.split('.')[0] }}"
