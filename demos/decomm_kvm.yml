@@ -14,7 +14,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "<h3>Network Interface Facts</h3>{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
+        snow_comment: "[code]<h5>Network Interface Facts</h5>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
 
     - name: Describe instance | smb shares
       register: r_smb_shares
@@ -25,9 +25,23 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "<h3>SMB Share Facts</h3>{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
+        snow_comment: "[code]<h5>SMB Share Facts</h5>[/code]{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
 
     - name: Describe instance | SQL Server
+      register: r_sql_server
       ansible.windows.win_reg_stat:
         path: HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL
-      register: current_version
+
+    - name: Add comment | sql server
+      when: r_sql_server.exists
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "[code]<h5>SQL Facts</h5>[/code]{{ r_sql_server.properties | to_nice_json | codify }}"   
+
+    - name: Add comment | sql server
+      when: not r_sql_server.exists
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "SQL Server not installed on this machine"
