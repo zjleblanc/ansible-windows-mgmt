@@ -1,6 +1,7 @@
 ---
 - name: Get kvm
   register: r_kvm_lookup
+  delegate_to: localhost
   community.general.proxmox_kvm:
     api_host: "{{ proxmox_api_host }}"
     api_token_id: "{{ proxmox_api_token_id }}"
@@ -12,6 +13,7 @@
 
 - name: Get kvm config
   register: r_kvm_config
+  delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/config"
     method: get
@@ -21,6 +23,7 @@
 - name: Snapshot kvm
   tags: snapshot
   register: r_kvm_snapshot
+  delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/snapshot"
     method: post
@@ -34,6 +37,7 @@
 
 - name: Get snapshot info
   register: r_kvm_snapshot_info
+  delegate_to: localhost
   ansible.builtin.uri:
     url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/snapshot"
     method: get
@@ -41,6 +45,7 @@
     headers: "{{ proxmox_kvm_decomm_auth_headers }}"
 
 - name: Set proxmox_kvm_info facts
+  delegate_to: localhost
   ansible.builtin.set_fact:
     proxmox_kvm_decomm_data:
       config: "{{ r_kvm_config.json.data }}"
