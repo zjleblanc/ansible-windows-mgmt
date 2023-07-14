@@ -1,0 +1,9 @@
+---
+- name: "Add comment | {{ snow_resource }}:{{ snow_sys_id }}"
+  delegate_to: localhost
+  tags: comment
+  servicenow.itsm.api:
+    resource: "{{ snow_resource | default('sc_req_item') }}"
+    action: patch
+    data:
+      comments: "{{ snow_comment }}"

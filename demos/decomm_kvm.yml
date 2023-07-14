@@ -5,22 +5,16 @@
 
   tasks:
     - name: Add comment | init decomm
-      delegate_to: localhost
-      servicenow.itsm.api:
-        resource: sc_req_item
-        sys_id: "{{ sys_id }}"
-        action: patch
-        data:
-          comments: "Beginning decomm process for {{ inventory_hostname }}"
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "Beginning decomm process for {{ inventory_hostname }}"
 
     - name: Add comment | interface facts
-      delegate_to: localhost
-      servicenow.itsm.api:
-        resource: sc_req_item
-        sys_id: "{{ sys_id }}"
-        action: patch
-        data:
-          comments: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"    
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "<h3>Network Interface Facts</h3>{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
 
     - name: Describe instance | smb shares
       register: r_smb_shares
@@ -28,10 +22,12 @@
         script: Get-SmbShare | ConvertTo-Json
         
     - name: Add comment | smb shares
-      delegate_to: localhost
-      servicenow.itsm.api:
-        resource: sc_req_item
-        sys_id: "{{ sys_id }}"
-        action: patch
-        data:
-          comments: "{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "<h3>SMB Share Facts</h3>{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
+
+    - name: Describe instance | SQL Server
+      ansible.windows.win_reg_stat:
+        path: HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL
+      register: current_version
