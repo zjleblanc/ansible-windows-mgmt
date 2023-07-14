@@ -28,6 +28,7 @@
         script: Get-SmbShare | ConvertTo-Json
         
     - name: Add comment | smb shares
+      delegate_to: localhost
       servicenow.itsm.api:
         resource: sc_req_item
         sys_id: "{{ sys_id }}"
