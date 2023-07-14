@@ -14,7 +14,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h5>Network Interface Facts</h5>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
+        snow_comment: "[code]<h4>Network Interface Facts</h4>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
 
     - name: Describe instance | smb shares
       register: r_smb_shares
@@ -25,7 +25,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h5>SMB Share Facts</h5>[/code]{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
+        snow_comment: "[code]<h4>SMB Share Facts</h4>[/code]{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
 
     - name: Describe instance | SQL Server
       register: r_sql_server
@@ -37,7 +37,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h5>SQL Facts</h5>[/code]{{ r_sql_server.properties | to_nice_json | codify }}"   
+        snow_comment: "[code]<h4>SQL Facts</h4>[/code]{{ r_sql_server.properties | to_nice_json | codify }}"   
 
     - name: Add comment | sql server
       when: not r_sql_server.exists
