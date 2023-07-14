@@ -24,8 +24,8 @@
 
     - name: Describe instance | smb shares
       register: r_smb_shares
-      ansible.windows.win_command:
-        cmd: Get-SmbShare | ConvertTo-Json
+      ansible.windows.win_powershell:
+        script: Get-SmbShare | ConvertTo-Json
         
     - name: Add comment | smb shares
       servicenow.itsm.api:
