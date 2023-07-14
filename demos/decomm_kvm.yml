@@ -4,7 +4,7 @@
   gather_facts: true
 
   tasks:
-    - name: Add note | init decomm
+    - name: Add comment | init decomm
       delegate_to: localhost
       servicenow.itsm.api:
         resource: sc_req_item
@@ -13,7 +13,7 @@
         data:
           comments: "Beginning decomm process for {{ inventory_hostname }}"
 
-    - name: Add note | interface facts
+    - name: Add comment | interface facts
       delegate_to: localhost
       servicenow.itsm.api:
         resource: sc_req_item
@@ -21,3 +21,16 @@
         action: patch
         data:
           comments: "{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"    
+
+    - name: Describe instance | smb shares
+      register: r_smb_shares
+      ansible.windows.win_command:
+        cmd: Get-SmbShare | ConvertTo-Json
+        
+    - name: Add comment | smb shares
+      servicenow.itsm.api:
+        resource: sc_req_item
+        sys_id: "{{ sys_id }}"
+        action: patch
+        data:
+          comments: "{{ r_smb_shares.stdout | codify }}"    
