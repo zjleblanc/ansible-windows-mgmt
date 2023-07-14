@@ -1,0 +1,47 @@
+---
+- name: Get kvm
+  register: r_kvm_lookup
+  community.general.proxmox_kvm:
+    api_host: "{{ proxmox_api_host }}"
+    api_token_id: "{{ proxmox_api_token_id }}"
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: "{{ proxmox_api_user }}"
+    node: "{{ proxmox_kvm_decomm_node }}"
+    name: "{{ proxmox_kvm_decomm_name }}"
+    state: current
+
+- name: Get kvm config
+  register: r_kvm_config
+  ansible.builtin.uri:
+    url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/config"
+    method: get
+    return_content: true
+    headers: "{{ proxmox_kvm_decomm_auth_headers }}"
+
+- name: Snapshot kvm
+  tags: snapshot
+  register: r_kvm_snapshot
+  ansible.builtin.uri:
+    url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/snapshot"
+    method: post
+    return_content: true
+    headers: "{{ proxmox_kvm_decomm_auth_headers }}"
+    body_format: json
+    body:
+      snapname: "{{ proxmox_kvm_decomm_name }}-{{ r_kvm_lookup.vmid }}-snap-{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+      description: "Snapshot taken by ansible decommissioning process @ {{ lookup('pipe', 'date +\"%Y-%m-%d %H:%M:%S\"') }}"
+      vmstate: true
+
+- name: Get snapshot info
+  register: r_kvm_snapshot_info
+  ansible.builtin.uri:
+    url: "{{ proxmox_kvm_decomm_url }}/nodes/pve/qemu/{{ r_kvm_lookup.vmid }}/snapshot"
+    method: get
+    return_content: true
+    headers: "{{ proxmox_kvm_decomm_auth_headers }}"
+
+- name: Set proxmox_kvm_info facts
+  ansible.builtin.set_fact:
+    proxmox_kvm_decomm_data:
+      config: "{{ r_kvm_config.json.data }}"
+      snapshots: "{{ r_kvm_snapshot_info.json.data }}"

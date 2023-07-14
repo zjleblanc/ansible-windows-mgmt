@@ -45,3 +45,15 @@
         file: tasks/snow_comment.yml
       vars:
         snow_comment: "SQL Server not installed on this machine"
+
+    - name: Describe instance | proxmox info
+      ansible.builtin.include_role:
+        name: proxmox_kvm_decomm
+      vars:
+        proxmox_kvm_decomm_name: "{{ inventory_hostname.split('.')[0] }}"
+
+    - name: Add comment | proxmox info
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "[code]<h3>Proxmox Facts</h3>[/code]{{ proxmox_kvm_decomm_data | to_nice_json | codify }}"   
