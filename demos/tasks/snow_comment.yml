@@ -4,6 +4,7 @@
   tags: comment
   servicenow.itsm.api:
     resource: "{{ snow_resource | default('sc_req_item') }}"
+    sys_id: "{{ sys_id }}"
     action: patch
     data:
       comments: "{{ snow_comment }}"
