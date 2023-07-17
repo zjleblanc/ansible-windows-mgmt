@@ -1,0 +1,66 @@
+---
+- name: Prep a Proxmox Windows VM for decommissioning
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    domain_controller: dc01.AUTODOTES.LOCAL
+    domain_name: autodotes.local
+
+  tasks:
+    - name: Add comment | init decomm
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "Beginning decomm process for {{ inventory_hostname }}"
+
+    - name: Delete AD object
+      tags: ad_delete
+      delegate_to: "{{ domain_controller }}"
+      community.windows.win_domain_computer:
+        name: "{{ inventory_hostname.split('.')[0] }}"
+        state: absent
+
+    - name: Delete agents
+      ansible.builtin.debug:
+        msg: "Delete McAfee and HIPS agent"
+
+    - name: Purge puppet
+      ansible.builtin.debug:
+        msg: "Purge puppet"
+
+    - name: Clean up external records
+      ansible.builtin.debug:
+        msg: "Delete entries from Webber/Emurald/SA4"
+
+    - name: Remove ITPA IDs
+      ansible.builtin.debug:
+        msg: "Delete cyberark accounts"
+
+    - name: SQL retirement
+      ansible.builtin.debug:
+        msg: "Retire SQL instance (if applicable)"
+
+    - name: Delete DNS entries
+      tags: dns_delete
+      delegate_to: "{{ domain_controller }}"
+      register: r_dns_entry
+      loop: ['A','AAAA']
+      loop_control:
+        loop_var: type
+      community.windows.win_dns_record:
+        name: "{{ inventory_hostname.split('.')[0] }}"
+        type: "{{ type }}"
+        zone: "{{ domain_name }}"
+        state: absent
+
+    - name: Delete from Proxmox
+      tags: kvm_delete
+      community.general.proxmox_kvm:
+        api_host: "{{ proxmox_api_host }}"
+        api_token_id: "{{ proxmox_api_token_id }}"
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        api_user: "{{ proxmox_api_user }}"
+        node: "{{ proxmox_kvm_decomm_node }}"
+        name: "{{ proxmox_kvm_decomm_name }}"
+        state: absent

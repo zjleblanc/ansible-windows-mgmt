@@ -4,11 +4,11 @@
   gather_facts: true
 
   tasks:
-    - name: Add comment | init decomm
+    - name: Add comment | init decomm prep
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "Beginning decomm process for {{ inventory_hostname }}"
+        snow_comment: "Prepping {{ inventory_hostname }} for decomm process"
 
     - name: Add comment | interface facts
       ansible.builtin.include_tasks:
