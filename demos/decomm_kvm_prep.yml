@@ -1,5 +1,5 @@
 ---
-- name: Decommission a Proxmox Windows VM
+- name: Prep a Proxmox Windows VM for decommissioning
   hosts: "{{ _hosts | default(omit) }}"
   gather_facts: true
 
@@ -46,14 +46,29 @@
       vars:
         snow_comment: "SQL Server not installed on this machine"
 
-    - name: Describe instance | proxmox info
+    - name: Describe instance | proxmox snapshot
       ansible.builtin.include_role:
         name: proxmox_kvm_decomm
       vars:
         proxmox_kvm_decomm_name: "{{ inventory_hostname.split('.')[0] }}"
 
-    - name: Add comment | proxmox info
+    - name: Add comment | proxmox snapshot
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
         snow_comment: "[code]<h3>Proxmox Facts</h3>[/code]{{ proxmox_kvm_decomm_data | to_nice_json | codify }}"   
+
+    - name: Disable AD object
+      tags: ad_disable
+      delegate_to: "{{ domain_controller | default('dc01.AUTODOTES.LOCAL') }}"
+      community.windows.win_domain_computer:
+        name: "{{ inventory_hostname.split('.')[0] }}"
+        enabled: false
+
+    - name: Add comment | Initiate grace period
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: >
+          [code]<h3>Initiating Grace Period</h3>[/code]
+          Grace period ends on {{ lookup('pipe', 'date -d \"+30 days\" +\"%Y-%m-%d %H:%M:%S\"') }}

@@ -21,7 +21,7 @@
     headers: "{{ proxmox_kvm_decomm_auth_headers }}"
 
 - name: Snapshot kvm
-  tags: snapshot
+  tags: kvm_snapshot
   register: r_kvm_snapshot
   delegate_to: localhost
   ansible.builtin.uri:
@@ -43,6 +43,17 @@
     method: get
     return_content: true
     headers: "{{ proxmox_kvm_decomm_auth_headers }}"
+
+- name: Stop kvm
+  tags: kvm_stop
+  community.general.proxmox_kvm:
+    api_host: "{{ proxmox_api_host }}"
+    api_token_id: "{{ proxmox_api_token_id }}"
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    api_user: "{{ proxmox_api_user }}"
+    node: "{{ proxmox_kvm_decomm_node }}"
+    name: "{{ proxmox_kvm_decomm_name }}"
+    state: stopped
 
 - name: Set proxmox_kvm_info facts
   delegate_to: localhost
