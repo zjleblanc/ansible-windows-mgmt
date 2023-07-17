@@ -6,19 +6,28 @@
   vars:
     domain_controller: dc01.AUTODOTES.LOCAL
     domain_name: autodotes.local
+    kvm_name: undef                 # hcl-guest-1
+    sys_id: undef                   # 5df9395e47003110cea484d7536d439b
 
   tasks:
+    - name: Assert required inputs
+      ansible.builtin.assert:
+        that:
+          - kvm_name != 'undef'
+          - sys_id != 'undef'
+        fail_msg: "Missing (at least) one required input: kvm_name and sys_id"
+    
     - name: Add comment | init decomm
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "Beginning decomm process for {{ inventory_hostname }}"
+        snow_comment: "Beginning decomm process for {{ kvm_name }}"
 
     - name: Delete AD object
       tags: ad_delete
       delegate_to: "{{ domain_controller }}"
       community.windows.win_domain_computer:
-        name: "{{ inventory_hostname.split('.')[0] }}"
+        name: "{{ kvm_name }}"
         state: absent
 
     - name: Delete agents
@@ -49,7 +58,7 @@
       loop_control:
         loop_var: type
       community.windows.win_dns_record:
-        name: "{{ inventory_hostname.split('.')[0] }}"
+        name: "{{ kvm_name }}"
         type: "{{ type }}"
         zone: "{{ domain_name }}"
         state: absent
@@ -61,6 +70,5 @@
         api_token_id: "{{ proxmox_api_token_id }}"
         api_token_secret: "{{ proxmox_api_token_secret }}"
         api_user: "{{ proxmox_api_user }}"
-        node: "{{ proxmox_kvm_decomm_node }}"
-        name: "{{ proxmox_kvm_decomm_name }}"
+        name: "{{ kvm_name }}"
         state: absent
