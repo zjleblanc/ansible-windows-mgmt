@@ -66,6 +66,7 @@
         enabled: false
 
     - name: Add comment | Initiate grace period
+      delegate_to: localhost
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
