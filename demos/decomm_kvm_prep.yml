@@ -65,11 +65,15 @@
         name: "{{ inventory_hostname.split('.')[0] }}"
         enabled: false
 
-    - name: Add comment | Initiate grace period
+    - name: Determine grace period expiration date
       delegate_to: localhost
+      ansible.builtin.set_fact:
+        grace_exp_date: "{{ lookup('pipe', 'date -d \"+30 days\" +\"%Y-%m-%d\"') }}"
+
+    - name: Add comment | Initiate grace period
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
         snow_comment: >
           [code]<h3>Initiating Grace Period</h3>[/code]
-          Grace period ends on {{ lookup('pipe', 'date -d \"+30 days\" +\"%Y-%m-%d %H:%M:%S\"') }}
+          Grace period ends on {{ grace_exp_date }}
