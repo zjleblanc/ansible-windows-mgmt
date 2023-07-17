@@ -46,6 +46,7 @@
 
 - name: Stop kvm
   tags: kvm_stop
+  delegate_to: localhost
   community.general.proxmox_kvm:
     api_host: "{{ proxmox_api_host }}"
     api_token_id: "{{ proxmox_api_token_id }}"
