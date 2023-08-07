@@ -3,7 +3,4 @@ plugin: microsoft.ad.ldap
 server: 192.168.0.186
 port: 389
 
-username: "{{ ansible_username }}"
-password: "{{ ansible_password }}"
-
 search_base: OU=Computers,OU=lab,DC=autodotes,DC=local
