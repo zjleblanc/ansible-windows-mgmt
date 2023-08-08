@@ -6,5 +6,3 @@ plugin: microsoft.ad.ldap
 # username:
 # password:
 ### End custom credential type ###
-
-search_base: OU=Computers,OU=lab,DC=autodotes,DC=local
