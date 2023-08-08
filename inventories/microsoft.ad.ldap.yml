@@ -1,6 +1,10 @@
 plugin: microsoft.ad.ldap
 
-server: 192.168.0.186
-port: 389
+### Supplied by custom credential type ###
+# server: 
+# port:
+# username:
+# password:
+### End custom credential type ###
 
 search_base: OU=Computers,OU=lab,DC=autodotes,DC=local
