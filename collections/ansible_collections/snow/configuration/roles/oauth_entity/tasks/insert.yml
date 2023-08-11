@@ -1,0 +1,40 @@
+---
+- name: ServiceNow | Query for existing oauth entity
+  register: _oauth_entity_query
+  failed_when: not (_oauth_entity_query.record|length)
+  servicenow.itsm.api_info:
+    resource: oauth_entity
+    sysparm_query: "name={{ oauth_entity_config.name }}"
+
+- name: ServiceNow | Create oauth entity
+  when: not (_oauth_entity_query.record|length)
+  register: _oauth_entity
+  servicenow.itsm.api:
+    resource: oauth_entity
+    action: post
+    data:
+      name: "{{ oauth_entity_config.name }}"
+      access: "{{ oauth_entity_config.access }}"
+      active: "{{ oauth_entity_config.active }}"
+      client_id: "{{ oauth_entity_config.client_id }}"
+      client_secret: "{{ oauth_entity_config.client_id }}"
+      default_grant_type: "{{ oauth_entity_config.default_grant_type }}"
+      auth_url: "{{ oauth_entity_config.auth_url }}"
+      token_url: "{{ oauth_entity_config.token_url }}"
+      redirect_url: "{{ oauth_entity_config.redirect_url }}"
+      refresh_token_lifespan: "{{ oauth_entity_config.refresh_token_lifespan }}"
+
+- name: ServiceNow | Patch existing oauth entity
+  when: _oauth_entity_query.record|length
+  register: _oauth_entity
+  servicenow.itsm.api:
+    resource: oauth_entity
+    action: patch
+    sys_id: "{{ _oauth_entity_query.record[0].sys_id }}"
+    data:
+      client_id: "{{ r_application_aap.json.client_id }}"
+      client_secret: "{{ r_application_aap.json.client_secret }}"
+
+- name: OAuth Entity | Add to created
+  ansible.builtin.set_fact:
+    oauth_entity_records: "{{ oauth_entities_created|default([]) + [_oauth_entity.record] }}"
