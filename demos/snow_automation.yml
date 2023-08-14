@@ -13,7 +13,7 @@
     snow_oauth_entity_name: "Ansible Controller OAuth"
     snow_oauth_profile_name: "Ansible Controller Write Profile"
     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
-    controller_org: 3 # Autodotes
+    controller_org: 3 # <SET ME>
 
   tasks:
     - name: AAP | Delete existing application (if exists)
