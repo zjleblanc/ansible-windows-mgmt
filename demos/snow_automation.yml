@@ -1,0 +1,234 @@
+---
+- name: Setup Service Now integration with Ansible Automation Platform
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  vars:
+    snow_host: "{{ lookup('env', 'SN_HOST') }}"
+    snow_username: "{{ lookup('env', 'SN_USERNAME') }}"
+    snow_pwd: "{{ lookup('env', 'SN_PASSWORD') }}"
+    snow_instance: "{{ (snow_host | ansible.builtin.urlsplit('hostname')).split('.')[0]  }}"
+    snow_app_name: "ServiceNow App ({{ snow_instance }})"
+    snow_oauth_entity_name: "Ansible Controller OAuth"
+    snow_oauth_profile_name: "Ansible Controller Write Profile"
+    controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
+    controller_org: 3 # <SET ME>
+
+  tasks:
+    - name: AAP | Delete existing application (if exists)
+      register: r_application
+      tags: oauth
+      ansible.controller.application:
+        name: "{{ snow_app_name }}"
+        organization: Autodotes
+        state: "absent"
+
+    - name: AAP | Create Service Now application
+      tags: oauth
+      register: r_application_aap
+      ansible.builtin.uri:
+        url: https://{{ controller_host }}/api/v2/applications/
+        method: post
+        status_code: [200,201]
+        headers:
+          Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
+        body_format: json
+        body:
+          name: "{{ snow_app_name }}"
+          description: "Application for integrating with ServiceNow ITSM ({{ snow_instance }})"
+          client_type: "confidential"
+          redirect_uris: "https://{{ snow_instance }}.service-now.com/oauth_redirect.do"
+          authorization_grant_type: "authorization-code"
+          organization: "{{ controller_org }}"
+
+    - name: Service Now | Disable business rules
+      tags: oauth
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+      vars:
+        snow_records:
+          - type: sys_script
+            data:
+              name: Auto set oauth client fields
+              active: false
+          - type: sys_script
+            data:
+              name: Validate OAuth entity profile
+              active: false
+
+    - name: Service Now | Create oauth entity
+      tags: oauth
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+      vars:
+        snow_records:
+          - type: oauth_entity
+            data:
+              name: "{{ snow_oauth_entity_name }}"
+              type: OAuth Provider
+              access: All application scopes
+              active: true
+              client_id: "{{ r_application_aap.json.client_id }}"
+              client_secret: "{{ r_application_aap.json.client_secret }}"
+              default_grant_type: Authorization Code
+              auth_url: "https://{{ controller_host }}/api/o/authorize/"
+              token_url: "https://{{ controller_host }}/api/o/token/"
+              redirect_url: "https://{{ snow_instance }}.service-now.com/oauth_redirect.do"
+              refresh_token_lifespan: 8640000
+
+    - name: Service Now | Create oauth entity scope
+      tags: oauth
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+      vars:
+        snow_records:
+          - type: oauth_entity_scope
+            data:
+              name: Ansible Controller Write
+              oauth_entity: "{{ snow_records_out['oauth_entity'][0].sys_id }}"
+              oauth_entity_scope: write
+
+    - name: Service Now | Create oauth entity profile
+      tags: oauth
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+      vars:
+        snow_records:
+          - type: oauth_entity_profile
+            data:
+              name: "{{ snow_oauth_profile_name }}"
+              oauth_entity: "{{ snow_records_out['oauth_entity'][0].sys_id }}"
+              grant_type: Authorization Code
+              default: true
+
+    - name: Service Now | Create oauth entity profile scope
+      tags: oauth
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+      vars:
+        snow_records:
+          - type: oauth_entity_profile_scope
+            data:
+              name: Ansible Controller Write Profile Scope
+              sys_name: Ansible Controller Write Profile Scope
+              oauth_entity_profile: "{{ snow_records_out['oauth_entity_profile'][0].sys_id }}"
+              oauth_entity_scope: "{{ snow_records_out['oauth_entity_scope'][0].sys_id }}"
+
+    - name: AAP | Get tower certificate
+      tags: cert
+      become: true
+      delegate_to: controller # configure host in inventory for controller
+      register: r_slurp_cert
+      ansible.builtin.slurp:
+        src: /etc/tower/tower.cert
+
+    - name: Service Now | Create System Certificate
+      tags: cert
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+        apply:
+          tags: cert
+      vars:
+        snow_records:
+          - type: sys_certificate
+            data:
+              name: Ansible Controller Certificate
+              type: trust_store
+              format: pem
+              pem_certificate: "{{ r_slurp_cert.content | ansible.builtin.b64decode }}"
+              active: true
+
+    - name: Service Now | Create REST message
+      tags: rest
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+        apply:
+          tags: rest
+      vars:
+        snow_records:
+          - type: sys_rest_message
+            data:
+              name: Ansible Automation Platform
+              authentication_type: oauth2
+              rest_endpoint: "https://{{ controller_host }}/api"
+              oauth2_profile: "{{ snow_oauth_profile_name }}"
+
+    - name: Service Now | Create Launch Ansible Job Function
+      tags: rest
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+        apply:
+          tags: rest
+      vars:
+        snow_records:
+          - type: sys_rest_message_fn
+            data:
+              name: Launch Ansible Job Template
+              function_name: Launch Ansible Job Template
+              http_method: post
+              rest_message: "{{ snow_records_out['sys_rest_message'][0].sys_id }}"
+              authentication_type: inherit_from_parent
+              rest_endpoint: "https://{{ controller_host }}/api/v2/job_templates/${job_id}/launch/"
+              oauth2_profile: "{{ snow_oauth_profile_name }}"
+              content: |
+                {
+                  "extra_vars":   {
+                  "_hosts": "${decomm_host}",
+                  "_msg": "${decomm_message}",
+                  "ritm": "${decomm_ritm}",
+                  "cat_item": "${decomm_cat_item}",
+                  "requested_for": "${decomm_requested_for}",
+                  "sys_id": "${decomm_sys_id}"
+                  }
+                }
+    
+    - name: Service Now | Create Catalog Item
+      tags: cat_item
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+        apply:
+          tags: cat_item
+      vars:
+        snow_records:
+          - type: sc_cat_item
+            data:
+              name: Decommission KVM Instance
+              short_description: Trigger Ansible job template to decommission a KVM instance
+              sc_catalogs: Service Catalog
+              category: Virtual Resources
+              state: published
+              active: true
+              request_method: submit
+
+    - name: Service Now | Create Catalog Item Options
+      tags: cat_item
+      ansible.builtin.include_role:
+        name: snow.configuration.records
+        apply:
+          tags: cat_item
+      vars:
+        snow_records:
+          - type: item_option_new
+            data:
+              name: decomm_host
+              sys_name: What is the instance FQDN?
+              question_text: What is the instance FQDN?
+              cat_item:  "{{ snow_records_out['sc_cat_item'][0].sys_id }}"
+              order: 100
+              active: true
+              mandatory: true
+              hidden: false
+          - type: item_option_new
+            data:
+              name: decomm_message
+              sys_name: What is the reason for decommissioning this instance?
+              question_text: What is the reason for decommissioning this instance?
+              cat_item:  "{{ snow_records_out['sc_cat_item'][0].sys_id }}"
+              type: Single Line Text
+              order: 200
+              active: true
+              mandatory: true
+              hidden: false
+
+    ## Manual Design of Process Engine Workflow
