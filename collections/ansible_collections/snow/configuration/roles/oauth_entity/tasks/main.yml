@@ -1,8 +1,0 @@
----
-- name: oauth_entity | insert 
-  loop: "{{ oauth_entity_configurations }}"
-  loop_control:
-    loop_var: oauth_entity_config
-    label: "{{ oauth_entity_config.name }}"
-  ansible.builtin.include_tasks:
-    file: insert.yml
