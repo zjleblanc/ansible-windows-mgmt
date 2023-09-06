@@ -9,11 +9,26 @@
       community.vmware.vmware_cluster_info:
         datacenter: SDDC-Datacenter
 
+    - name: Debug cluster info
+      tag: debug
+      ansible.builtin.debug:
+        var: r_cluster_info
+
     - name: Gather information about all datacenters
       register: r_datacenter_info
       community.vmware.vmware_datacenter_info:
+
+    - name: Debug datacenter info
+      tag: debug
+      ansible.builtin.debug:
+        var: r_datacenter_info
 
     - name: Gather info for datastores
       register: r_datastore_info
       community.vmware.vmware_datastore_info:
         datacenter_name: SDDC-Datacenter
+
+    - name: Debug datastore info
+      tag: debug
+      ansible.builtin.debug:
+        var: r_datastore_info
