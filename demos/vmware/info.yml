@@ -1,0 +1,19 @@
+---
+- name: Gather VMWare Info
+  hosts: localhost
+  become: false
+
+  tasks:
+    - name: Gather cluster info from given datacenter
+      register: r_cluster_info
+      community.vmware.vmware_cluster_info:
+        datacenter: SDDC-Datacenter
+
+    - name: Gather information about all datacenters
+      register: r_datacenter_info
+      community.vmware.vmware_datacenter_info:
+
+    - name: Gather info for datastores
+      register: r_datastore_info
+      community.vmware.vmware_datastore_info:
+        datacenter_name: SDDC-Datacenter

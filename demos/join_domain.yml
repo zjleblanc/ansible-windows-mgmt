@@ -15,6 +15,8 @@
       when: join_domain | default(false)
       throttle: 1
       block:
+        # TODO: Add task to disable ipv6 (Disable-NetAdapterBinding)
+        
         - name: Configure domain controller as nameserver
           ansible.windows.win_dns_client:
             adapter_names: Ethernet*
