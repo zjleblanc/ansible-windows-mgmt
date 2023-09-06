@@ -10,7 +10,7 @@
         datacenter: SDDC-Datacenter
 
     - name: Debug cluster info
-      tag: debug
+      tags: debug
       ansible.builtin.debug:
         var: r_cluster_info
 
@@ -19,7 +19,7 @@
       community.vmware.vmware_datacenter_info:
 
     - name: Debug datacenter info
-      tag: debug
+      tags: debug
       ansible.builtin.debug:
         var: r_datacenter_info
 
@@ -29,6 +29,6 @@
         datacenter_name: SDDC-Datacenter
 
     - name: Debug datastore info
-      tag: debug
+      tags: debug
       ansible.builtin.debug:
         var: r_datastore_info
