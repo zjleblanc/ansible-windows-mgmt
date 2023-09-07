@@ -6,7 +6,7 @@
   
   vars:
     vm_name: vmware-demo-1
-    vm_desired_state: powered-off
+    vm_desired_state: poweredoff
 
   tasks:
     - name: Find vm info by name
@@ -14,15 +14,7 @@
       community.vmware.vmware_vm_info:
         vm_name: "{{ vm_name }}"
 
-    - name: Gather guest info
-      register: r_guest_info
-      community.vmware.vmware_guest_info:
-        datacenter: "{{ r_vm_info.virtual_machines[0].datacenter }}"
-        name: "{{ vm_name }}"
-
     - name: "Set guest to desired state | {{ vm_desired_state }}"
       community.vmware.vmware_guest:
-        uuid: "{{ r_guest_info.instance.instance_uuid }}"
-        folder: "{{ r_guest_info.instance.hw_folder }}"
-        datacenter: "{{ r_vm_info.virtual_machines[0].datacenter }}"
+        uuid: "{{ r_vm_info.virtual_machines[0].uuid }}"
         state: "{{ vm_desired_state }}"
