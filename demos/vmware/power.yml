@@ -23,4 +23,5 @@
     - name: "Set guest to desired state | {{ vm_desired_state }}"
       community.vmware.vmware_guest:
         uuid: "{{ r_guest_info.instance.instance_uuid }}"
+        folder: "{{ r_guest_info.instance.hw_folder }}"
         state: "{{ vm_desired_state }}"
