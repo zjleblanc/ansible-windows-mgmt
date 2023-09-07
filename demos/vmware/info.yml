@@ -2,6 +2,7 @@
 - name: Gather VMWare Info
   hosts: localhost
   become: false
+  gather_facts: false
 
   tasks:
     - name: Gather cluster info from given datacenter
