@@ -1,0 +1,24 @@
+---
+- name: Gather VMWare Info
+  hosts: localhost
+  become: false
+  gather_facts: false
+  
+  vars:
+    vm_name: vmware-demo-1
+
+  tasks:
+    - name: Find vm info by name
+      register: r_vm_info
+      community.vmware.vmware_vm_info:
+        vm_name: "{{ vm_name }}"
+
+    - name: Create a snapshot
+      community.vmware.vmware_guest_snapshot:
+        datacenter: "{{ r_vm_info.virtual_machines[0].datacenter }}"
+        folder: "{{ r_vm_info.virtual_machines[0].folder }}"
+        name: "{{ vm_name }}"
+        state: present
+        snapshot_name: "snapshot-{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+        description: "Snapshot taken by Ansible on {{ lookup('pipe', 'date +%Y/%m/%d') }}"
+      delegate_to: localhost
