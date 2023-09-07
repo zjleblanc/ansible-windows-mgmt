@@ -24,4 +24,5 @@
       community.vmware.vmware_guest:
         uuid: "{{ r_guest_info.instance.instance_uuid }}"
         folder: "{{ r_guest_info.instance.hw_folder }}"
+        datacenter: "{{ r_vm_info.virtual_machines[0].datacenter }}"
         state: "{{ vm_desired_state }}"
