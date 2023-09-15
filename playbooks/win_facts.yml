@@ -31,3 +31,7 @@
           }
 
           Write-Host ($data | ConvertTo-Json)
+
+    - name: Describe shares
+      ansible.builtin.debug:
+        msg: "{{ r_smb_shares.host_out | from_json }}"
