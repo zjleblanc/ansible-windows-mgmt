@@ -45,7 +45,7 @@
     - name: Service Now | Disable business rules
       tags: oauth
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
       vars:
         snow_records:
           - type: sys_script
@@ -60,7 +60,7 @@
     - name: Service Now | Create oauth entity
       tags: oauth
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
       vars:
         snow_records:
           - type: oauth_entity
@@ -80,7 +80,7 @@
     - name: Service Now | Create oauth entity scope
       tags: oauth
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
       vars:
         snow_records:
           - type: oauth_entity_scope
@@ -92,7 +92,7 @@
     - name: Service Now | Create oauth entity profile
       tags: oauth
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
       vars:
         snow_records:
           - type: oauth_entity_profile
@@ -105,7 +105,7 @@
     - name: Service Now | Create oauth entity profile scope
       tags: oauth
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
       vars:
         snow_records:
           - type: oauth_entity_profile_scope
@@ -126,7 +126,7 @@
     - name: Service Now | Create System Certificate
       tags: cert
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
         apply:
           tags: cert
       vars:
@@ -142,7 +142,7 @@
     - name: Service Now | Create REST message
       tags: rest
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
         apply:
           tags: rest
       vars:
@@ -157,7 +157,7 @@
     - name: Service Now | Create Launch Ansible Job Function
       tags: rest
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
         apply:
           tags: rest
       vars:
@@ -186,7 +186,7 @@
     - name: Service Now | Create Catalog Item
       tags: cat_item
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
         apply:
           tags: cat_item
       vars:
@@ -204,7 +204,7 @@
     - name: Service Now | Create Catalog Item Options
       tags: cat_item
       ansible.builtin.include_role:
-        name: snow.configuration.records
+        name: mgmt.snow_configuration.records
         apply:
           tags: cat_item
       vars:
