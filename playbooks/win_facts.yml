@@ -30,7 +30,7 @@
             $data[$_.Name].add("access", $access)
           }
 
-          Write-Host ($data | ConvertTo-Json)
+          Write-Host ($data | ConvertTo-Json -Depth 5)
 
     - name: Describe shares
       ansible.builtin.debug:

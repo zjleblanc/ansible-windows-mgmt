@@ -56,6 +56,8 @@
             domain_admin_password: "{{ win_domain_admin_password }}"
             domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
             state: domain
+
+        # Make sure DNS entries are present for new hosts
         
         - name: Reboot to complete domain join
           ansible.builtin.win_reboot:
