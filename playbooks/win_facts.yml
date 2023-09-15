@@ -14,3 +14,20 @@
     - name: Print facts
       ansible.builtin.debug:
         msg: "{{ hostvars[inventory_hostname] }}"
+
+    - name: Get shares
+      register: r_smb_shares
+      ansible.windows.win_powershell:
+        script: |
+          $data = @{}
+          $shares = Get-SmbShare
+
+          $shares | ForEach-Object {
+            $data.add($_.Name, @{})
+            $data[$_.Name].add("metadata", $_)
+
+            $access = Get-SmbShareAccess -Name $_.Name
+            $data[$_.Name].add("access", $access)
+          }
+
+          Write-Host ($data | ConvertTo-Json)
