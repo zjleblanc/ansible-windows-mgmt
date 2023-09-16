@@ -7,9 +7,9 @@
 DOCUMENTATION = r'''
 ---
 module: smb_info
-short_description: Gather information regarding samba shares
+short_description: Gather information regarding server message block shares
 description:
-  - Gets list of samba shares on a Windows hosts
+  - Gets list of server message block shares on a Windows hosts
   - Gets access details for each share
 options:
   name:
@@ -24,7 +24,7 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: Get info for all samba shares
+- name: Get info for all server message block shares
   mgmt.windows.smb_info:
 
 - name: Get info for shares staring with Net
@@ -34,7 +34,7 @@ EXAMPLES = r'''
 
 RETURN = r'''
 info:
-    description: Object containing entries for each samba share identified with metadata and access details
+    description: Object containing entries for each server message block share identified with metadata and access details
     returned: success
     type: dict
 '''
