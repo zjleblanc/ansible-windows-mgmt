@@ -1,0 +1,46 @@
+---
+- name: No-op job for Service Now demo
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+    - name: Add comment | init decomm prep
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "Prepping {{ _hosts }} for decomm process"
+
+    - name: Create extra vars object
+      ansible.builtin.set_fact:
+        extra:
+          _hosts: "{{ _hosts }}"
+          _msg: "{{ _msg }}"
+          ritm: "{{ ritm }}"
+          cat_item: "{{ cat_item }}"
+          requested_for: "{{ requested_for }}"
+          sys_id: "{{ sys_id }}"
+
+    - name: Add comment | extra vars
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "[code]<h3>Extra Vars from Service Now</h3>[/code]{{ extra | to_nice_json | codify }}"
+
+    - name: Add comment | interface facts
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: "[code]<h3>Network Interface Facts</h3>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
+
+    - name: Determine grace period expiration date
+      delegate_to: localhost
+      ansible.builtin.set_fact:
+        grace_exp_date: "{{ lookup('pipe', 'date -d \"+30 days\" +\"%Y-%m-%d\"') }}"
+
+    - name: Add comment | Initiate grace period
+      ansible.builtin.include_tasks:
+        file: tasks/snow_comment.yml
+      vars:
+        snow_comment: >
+          [code]<h3>Initiating Grace Period</h3>[/code]
+          Grace period ends on {{ grace_exp_date }}
