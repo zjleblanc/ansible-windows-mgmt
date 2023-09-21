@@ -30,7 +30,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h3>Network Interface Facts</h3>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
+        snow_comment: "[code]<h3>Host Environment Variables</h3>[/code]{{ hostvars[inventory_hostname]['ansible_env'] | to_nice_json | codify }}"  
 
     - name: Determine grace period expiration date
       delegate_to: localhost
