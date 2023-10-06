@@ -2,6 +2,8 @@
 .vscode/
 ansible.cfg
 demos/local_vars/
+*.cert
+*.log
 
 **/__pycache__/**
 **/.DS_Store
