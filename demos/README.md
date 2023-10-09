@@ -4,3 +4,4 @@
 - [Install SQL Server Using DSC](./docs/install_mssql_dsc.md)
 - [Join Windows Server to Domain](./docs/join_domain.md)
 - [Service Now Integration: Decomm VM](./docs/snow_automation.md)
+- [Delete Long File Paths on Windows](./docs/delete_long_paths.md)
