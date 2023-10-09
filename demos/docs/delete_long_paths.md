@@ -1,4 +1,4 @@
-# Join Windows Server to Domain
+# Delete Long Paths
 
 Requirements:
 - Active Directory domain controller
