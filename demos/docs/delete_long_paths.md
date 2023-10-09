@@ -47,3 +47,7 @@ Objectives:
 ![Delete Job Template](./files/delete_job_template.png)
 <br>
 ![Delete Job Survey](./files/delete_job_survey.png)
+
+## Gotchas
+
+If you are using kerberos to authenticate with a domain account, then credential delegation is required when deleting folders at remote destinations. Refer to the [Ansible Kerberos](https://docs.ansible.com/ansible/latest/os_guide/windows_winrm.html#kerberos) docs for more information.
