@@ -41,9 +41,7 @@
       loop: "{{ root_folders.split('\n') }}"
       loop_control:
         loop_var: root_folder_path
-      ansible.windows.win_file:
-        path: "{{ root_folder_path }}"
-        state: absent
+      ansible.windows.win_command: "rmdir /S /Q {{ root_folder_path }}"
 
     - name: Disable long paths
       tags:
