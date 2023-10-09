@@ -14,7 +14,6 @@
       - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d\0d4323d6-64fa-4151-82c3-a109a74fab58\theendofthesuperlongpath
   tasks:
     - name: Enable long paths
-      become: true
       tags:
         - setup
         - delete
@@ -33,7 +32,6 @@
         file: tasks/setup_long_paths.yml
 
     - name: Delete folder
-      become: true
       tags: delete
       loop: "{{ root_folders.split('\n') }}"
       loop_control:
@@ -43,7 +41,6 @@
         state: absent
 
     - name: Disable long paths
-      become: true
       tags:
         - setup
         - delete
