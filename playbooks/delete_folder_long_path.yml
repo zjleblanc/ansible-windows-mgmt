@@ -23,11 +23,6 @@
         data: 1
         type: dword
 
-    - name: test
-      tags: always
-      ansible.windows.win_command: whoami
-      register: r_whoami
-
     - name: Create directories
       tags: setup
       loop: "{{ root_folders.strip('\n').split('\n') }}"
@@ -41,8 +36,10 @@
       loop: "{{ root_folders.split('\n') }}"
       loop_control:
         loop_var: root_folder_path
-      ansible.windows.win_command: "rmdir /S /Q {{ root_folder_path }}"
-
+      ansible.windows.win_shell: "rmdir /S /Q {{ root_folder_path }}"
+      args:
+        executable: cmd
+        
     - name: Disable long paths
       tags:
         - setup
