@@ -1,0 +1,51 @@
+---
+- name: Delete a folder with a long path
+  hosts: "{{ _hosts | default('win11-guest-1') }}"
+  gather_facts: false
+
+  vars:
+    root_folders: |
+      superlongfolder
+      anotherlongone
+      whyarethesenamessolong
+    folders:
+      - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d
+      - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d\0d4323d6-64fa-4151-82c3-a109a74fab58
+      - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d\0d4323d6-64fa-4151-82c3-a109a74fab58\theendofthesuperlongpath
+  tasks:
+    - name: Enable long paths
+      tags:
+        - setup
+        - delete
+      ansible.windows.win_regedit:
+        path: HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem
+        name: LongPathsEnabled
+        data: 1
+        type: dword
+
+    - name: Create directories
+      tags: setup
+      loop: "{{ root_folders.strip().split('\n') }}"
+      loop_control:
+        loop_var: root_folder_path
+      ansible.builtin.include_tasks:
+        file: tasks/setup_long_paths.yml
+
+    - name: Delete folder
+      tags: delete
+      loop: "{{ root_folders.split('\n') }}"
+      loop_control:
+        loop_var: root_folder_path
+      ansible.windows.win_file:
+        path: "~\\{{ root_folder_path }}"
+        state: absent
+
+    - name: Disable long paths
+      tags:
+        - setup
+        - delete
+      ansible.windows.win_regedit:
+        path: HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem
+        name: LongPathsEnabled
+        data: 0
+        type: dword
