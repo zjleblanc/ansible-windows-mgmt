@@ -23,6 +23,11 @@
         data: 1
         type: dword
 
+    - name: test
+      tags: always
+      ansible.windows.win_command: whoami
+      register: r_whoami
+
     - name: Create directories
       tags: setup
       loop: "{{ root_folders.strip('\n').split('\n') }}"
