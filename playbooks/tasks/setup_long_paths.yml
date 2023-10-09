@@ -3,16 +3,16 @@
   tags: setup
   loop: "{{ folders }}"
   ansible.windows.win_file:
-    path: "~\\{{ root_folder_path }}\\{{ item }}"
+    path: "{{ root_folder_path }}\\{{ item }}"
     state: directory
 
 - name: Create directory structure
   tags: setup
   loop: "{{ folders }}"
   loop_control:
-    label: "~\\{{ root_folder_path }}\\{{ folders[-1] }}\\{{ item }}"
+    label: "{{ root_folder_path }}\\{{ folders[-1] }}\\{{ item }}"
   ansible.windows.win_file:
-    path: "~\\{{ root_folder_path }}\\{{ folders[-1] }}\\{{ item }}"
+    path: "{{ root_folder_path }}\\{{ folders[-1] }}\\{{ item }}"
     state: directory
 
 - name: Create some files
@@ -23,5 +23,5 @@
     - file3.txt
   ansible.windows.win_copy:
     content: "Test file for deletion: {{ item }}"
-    dest: "~\\{{ root_folder_path }}\\{{ folders[-1] }}\\{{ folders[-1] }}\\{{ item }}"
+    dest: "{{ root_folder_path }}\\{{ folders[-1] }}\\{{ folders[-1] }}\\{{ item }}"
     state: present

@@ -5,9 +5,9 @@
 
   vars:
     root_folders: |
-      superlongfolder
-      anotherlongone
-      whyarethesenamessolong
+      C:\Users\Administrator\superlongfolder
+      C:\Users\Administrator\anotherlongone
+      C:\Users\Administrator\whyarethesenamessolong
     folders:
       - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d
       - 6954e8e4-ebfa-4f6e-95da-7ccb067ed4be\302355aa-9654-45f7-b484-c60ea5885d2d\0d4323d6-64fa-4151-82c3-a109a74fab58
@@ -37,7 +37,7 @@
       loop_control:
         loop_var: root_folder_path
       ansible.windows.win_file:
-        path: "~\\{{ root_folder_path }}"
+        path: "{{ root_folder_path }}"
         state: absent
 
     - name: Disable long paths
