@@ -25,7 +25,7 @@
 
     - name: Create directories
       tags: setup
-      loop: "{{ root_folders.strip().split('\n') }}"
+      loop: "{{ root_folders.strip('\n').split('\n') }}"
       loop_control:
         loop_var: root_folder_path
       ansible.builtin.include_tasks:
