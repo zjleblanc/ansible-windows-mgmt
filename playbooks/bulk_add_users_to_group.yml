@@ -10,7 +10,8 @@
       sql_svc
       sql_agt
       not_a_group
-    user_account_list: "{{ user_accounts.strip('\n').split('\n') }}"
+    # user_account_list: "{{ user_accounts.strip('\n').split('\n') }}"
+    user_account_list: "{{ lookup('file', playbook_dir + '/files/users_mix.txt').strip('\n').split('\n') }}"
 
   tasks:
     - name: Get the SID for all user accounts as a filter
@@ -23,7 +24,7 @@
           - samAccountName
 
     - name: Get valid user accounts
-      set_fact:
+      ansible.builtin.set_fact:
         user_accounts_valid: "{{ r_users.objects | map(attribute='samAccountName') | intersect(user_account_list) }}"
         user_accounts_invalid: "{{ user_account_list | difference(r_users.objects | map(attribute='samAccountName')) }}"
 
@@ -32,3 +33,7 @@
         name: "{{ target_group }}"
         members: "{{ user_accounts_valid  }}"
         state: present
+
+    - name: Report
+      ansible.builtin.debug:
+        msg: "Valid: {{ user_accounts_valid | length }}  Inalid: {{ user_accounts_invalid | length }}"

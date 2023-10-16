@@ -1,0 +1,27 @@
+---
+- name: Create AD groups
+  hosts: dc01.AUTODOTES.LOCAL
+  gather_facts: false
+
+  tasks:
+    - name: Read groups from csv
+      register: r_groups
+      delegate_to: localhost
+      community.general.read_csv:
+        path: "{{ playbook_dir }}/files/groups.csv"
+        key: GroupName
+
+      # Fields ignored (for now)
+      # Members, DFS, Gateway, Notes, Ticket
+    - name: Create AD groups
+      loop: "{{ r_groups.dict | dict2items }}"
+      loop_control:
+        loop_var: group
+        label: "{{ group.key }}"
+      community.windows.win_domain_group:
+        name: "{{ group.value['GroupName'] }}"
+        category: "{{ group.value['GroupCategory'] }}"
+        scope: "{{ group.value['GroupScope'] }}"
+        description: "{{ group.value['Description'] }}"
+        organizational_unit: "{{ group.value['OU'] }}"
+        managed_by: "{{ group.value['ManagedBy'] }}"

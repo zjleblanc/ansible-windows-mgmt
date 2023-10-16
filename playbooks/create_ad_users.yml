@@ -1,0 +1,33 @@
+---
+- name: Create AD groups
+  hosts: dc01.AUTODOTES.LOCAL
+  gather_facts: false
+
+  vars:
+    target_group:
+      name: TrashMe
+      scope: global
+      path: OU=groups,OU=lab,DC=autodotes,DC=local
+    ad_users: "{{ lookup('file', playbook_dir + '/files/users.txt').strip('\n').split('\n') }}"
+
+  tasks:
+    - name: Ensure group exists
+      community.windows.win_domain_group:
+        name: "{{ target_group.name }}"
+        scope: "{{ target_group.scope }}"
+        path: "{{ target_group.path }}"
+
+    - name: Ensure users exist 
+      loop: "{{ ad_users }}"
+      community.windows.win_domain_user:
+        name: "{{ item }}"
+        password: R3dH4t!
+        state: present
+        path: OU=testusers,OU=lab,DC=autodotes,DC=local
+
+    - name: "Add valid users to target group | {{ target_group.name }}"
+      tags: add_to_group
+      community.windows.win_domain_group_membership:
+        name: "{{ target_group.name }}"
+        members: "{{ ad_users  }}"
+        state: present

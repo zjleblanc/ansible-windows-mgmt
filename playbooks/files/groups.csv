@@ -1,0 +1,22 @@
+GroupName,GroupCategory,GroupScope,OU,Description,ManagedBy,Members,Notes,DFS,Gateway,Ticket
+Autodotes-CREATE-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-CREATE-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-DISPLAY-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-DISPLAY-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-PUBLISH-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-PUBLISH-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local",Autodotes group - no region,zach,,Created by ansible,,,TASK1234567 
+Autodotes-North-CREATE-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - north",zach,,Created by ansible,,,TASK1234567 
+Autodotes-North-DISPLAY-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - north",zach,,Created by ansible,,,TASK1234567 
+Autodotes-North-DISPLAY-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - north",zach,,Created by ansible,,,TASK1234567 
+Autodotes-North-PUBLISH-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - north",zach,,Created by ansible,,,TASK1234567 
+Autodotes-North-PUBLISH-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - north",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-CREATE-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-CREATE-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-DISPLAY-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-DISPLAY-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-PUBLISH-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-South-PUBLISH-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - south",zach,,Created by ansible,,,TASK1234567 
+Autodotes-East-DISPLAY-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - east",zach,,Created by ansible,,,TASK1234567 
+Autodotes-East-DISPLAY-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - east",zach,,Created by ansible,,,TASK1234567 
+Autodotes-East-PUBLISH-DEV,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - east",zach,,Created by ansible,,,TASK1234567 
+Autodotes-East-PUBLISH-QA,Security,Global,"OU=testgroups,OU=lab,DC=autodotes,DC=local","Autodotes group - east",zach,,Created by ansible,,,TASK1234567 
