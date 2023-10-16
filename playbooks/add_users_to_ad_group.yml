@@ -1,0 +1,34 @@
+---
+- name: Create AD groups
+  hosts: dc01.AUTODOTES.LOCAL
+  gather_facts: false
+
+  vars:
+    search_root: "DC=autodotes,DC=local"
+    target_group: Austin
+    user_accounts: |
+      sql_svc
+      sql_agt
+      not_a_group
+    user_account_list: "{{ user_accounts.strip('\n').split('\n') }}"
+
+  tasks:
+    - name: Get the SID for all user accounts as a filter
+      register: r_users
+      community.windows.win_domain_object_info:
+        search_scope: subtree
+        search_base: "{{ search_root }}"
+        filter: ObjectClass -eq 'user' -and objectCategory -eq 'Person'
+        properties:
+          - samAccountName
+
+    - name: Get valid user accounts
+      set_fact:
+        user_accounts_valid: "{{ r_users.objects | map(attribute='samAccountName') | intersect(user_account_list) }}"
+        user_accounts_invalid: "{{ user_account_list | difference(r_users.objects | map(attribute='samAccountName')) }}"
+
+    - name: "Add valid users to target group | {{ target_group }}"
+      community.windows.win_domain_group_membership:
+        name: "{{ target_group }}"
+        members: "{{ user_accounts_valid  }}"
+        state: present

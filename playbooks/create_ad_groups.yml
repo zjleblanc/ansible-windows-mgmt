@@ -1,0 +1,27 @@
+---
+- name: Create AD groups
+  hosts: dc01.AUTODOTES.LOCAL
+  gather_facts: false
+
+  vars:
+    ad_groups:
+      - name: Houston
+        scope: global
+        path: OU=groups,DC=autodotes,DC=local
+      - name: Midland
+        scope: global
+        path: OU=groups,DC=autodotes,DC=local
+      - name: San Antonio
+        scope: global
+        path: OU=groups,DC=autodotes,DC=local
+      - name: Austin
+        scope: global
+        path: OU=groups,OU=lab,DC=autodotes,DC=local
+
+  tasks:
+    - name: Ensure group exists
+      loop: "{{ ad_groups }}"
+      community.windows.win_domain_group:
+        name: "{{ item.name }}"
+        scope: "{{ item.scope }}"
+        path: "{{ item.path }}"
