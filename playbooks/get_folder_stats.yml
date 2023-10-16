@@ -1,0 +1,19 @@
+---
+- name: Create AD groups
+  hosts: dc01.AUTODOTES.LOCAL
+  gather_facts: false
+
+  vars:
+    search_root: "DC=autodotes,DC=local"
+    target_group: Austin
+    servers: |
+      win11-guest-1
+      win11-guest-2
+    # server_list: "{{ servers.strip('\n').split('\n') }}"
+    server_list: "{{ lookup('file', playbook_dir + '/files/server_list.txt').strip('\n').split('\n') }}"
+
+  tasks:
+    - name: Find folders/symlinks in multiple paths
+      loop: "{{ server_list }}"
+      register: r_net_shares_raw
+      ansible.windows.win_shell: (net view \\{{ item }}) -match '\sDisk\s' -replace '\s+Disk.*'
