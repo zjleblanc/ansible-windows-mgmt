@@ -13,7 +13,10 @@
     server_list: "{{ lookup('file', playbook_dir + '/files/server_list.txt').strip('\n').split('\n') }}"
 
   tasks:
-    - name: Find folders/symlinks in multiple paths
+    - name: Get stats for each share
       loop: "{{ server_list }}"
-      register: r_net_shares_raw
-      ansible.windows.win_shell: (net view \\{{ item }}) -match '\sDisk\s' -replace '\s+Disk.*'
+      loop_control:
+        loop_var: server
+      ansible.builtin.include_tasks:
+        file: tasks/get_share_stats.yml
+

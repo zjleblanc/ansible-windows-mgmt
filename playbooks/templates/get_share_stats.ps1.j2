@@ -1,0 +1,16 @@
+$Ansible.Result["folder_sizes"] = @()
+$Ansible.Changed = $false;
+$shares = (net view \\{{ server}}) -match '\sDisk\s' -replace '\s+Disk.*'
+
+foreach($share in $shares) {
+  $children = Get-ChildItem -LiteralPath "\\{{ server}}\$share" | Where PSIsContainer | Select-Object -Property FullName
+  foreach($child in $children) {
+    $size = (Get-ChildItem -Path $child.FullName -File -Recurse | Measure-Object -Property Length -Sum).Sum
+    $Ansible.Result["folder_sizes"] += [PSCustomObject]@{
+      Server = "{{ server}}"
+      Share = $share
+      FolderName = $child.FullName
+      SizeBytes = if ($size -eq $null) { 0 } else { $size }
+    }
+  }
+}
