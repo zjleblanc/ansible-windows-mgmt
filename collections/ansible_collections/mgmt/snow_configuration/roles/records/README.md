@@ -1,30 +1,33 @@
-oauth_entity
+mgmt.snow_configuration.records
 =========
 
-Role Variables
---------------
+Wrap the Service Now Table API module to be "idempotent".
 
-| Variable | Type | Value or Expression | Description |
-| -------- | ------- | ------------------- | --------- |
-| oauth_entity_configurations | default | [] |  |
+Galaxy Tags: \[ service_now table records \]
+
+Required Variables
+------------------
+
+| Name | Example | Description |
+| -------- | ------- | ------------------- |
+| snow_records | `[{ ... }]` | A list of Service Now records to insert |
 
 Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+---------------- 
 
   ```yaml
-    - hosts: servers
+    - hosts: localhost
       tasks:
-        - name: Execute oauth_entity role
+        - name: Execute records role
           ansible.builtin.include_role:
-            name: oauth_entity
+            name: mgmt.snow_configuration.records
           vars:
-            oauth_entity_configurations:
-              - name: Oauth Entity
-                client_id: "..."
-                client_secret: "..."
-              ...
+            snow_records:
+              - type: oauth_entity_scope
+                data:
+                  name: Ansible Controller Write
+                  oauth_entity: "{{ snow_records_out['oauth_entity'][0].sys_id }}"
+                  oauth_entity_scope: write
   ```
 
 License
@@ -35,5 +38,3 @@ license (GPL-2.0-or-later, MIT, etc)
 Author Information
 -------
 **Zachary LeBlanc**
-
-Red Hat
