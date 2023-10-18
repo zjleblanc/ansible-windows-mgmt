@@ -70,7 +70,7 @@ Including an example of how to use your role (for instance, with variables passe
   ```yaml
     - name: Install MSSQL using DSC
       ansible.builtin.include_role:
-        name: mssql
+        name: mgmt.windows.mssql
       vars:
         netbios: AUTODOTES
         mssql_base_ldap_path: "OU=Users,DN=autodotes,DN=local"

@@ -13,7 +13,7 @@
 
     - name: Patch server
       ansible.builtin.include_role:
-        name: patch
+        name: mgmt.windows.patch
 
     # - name: Patch server (turn off reporting)
     #   include_role: patch

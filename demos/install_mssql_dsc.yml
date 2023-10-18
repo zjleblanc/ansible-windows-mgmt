@@ -7,7 +7,7 @@
     - name: Install MSSQL using DSC
       tags: always
       ansible.builtin.include_role:
-        name: mssql
+        name: mgmt.windows.mssql
       vars:
         netbios: AUTODOTES
         domain_controller: dc01.AUTODOTES.LOCAL
