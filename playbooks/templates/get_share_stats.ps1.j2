@@ -12,5 +12,6 @@ foreach($share in $shares) {
       FolderName = $child.FullName
       SizeBytes = if ($size -eq $null) { 0 } else { $size }
     }
+    $Ansible.Changed = $true;
   }
 }
