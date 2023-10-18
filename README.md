@@ -2,12 +2,11 @@
 
 Ansible repository for content used to manage Windows servers
 
-## Playbooks
-- [patching.yml](./playbooks/patching.yml)
 
 ## Roles
-- [mssql](./roles/mssql/README.md)<br>This role installs PowerShell requirements and adds Windows features required  for SQL Server before completing an installation of a SQL Server instance using  desired state configuration.
-- [patch](./roles/patch/README.md)<br>Apply updates to a Windows server
+- [mgmt.windows.mssql](./collections/ansible_collections/mgmt/windows/roles/mssql/README.md)<br>This role installs PowerShell requirements and adds Windows features required  for SQL Server before completing an installation of a SQL Server instance using  desired state configuration
+- [mgmt.windows.patch](./collections/ansible_collections/mgmt/windows/roles/patch/README.md)<br>Apply updates to a Windows server
+- [mgmt.pve.proxmox_kvm](./collections/ansible_collections/mgmt/pve/roles/proxmox_kvm/README.md)<br>Provision a Proxmox KVM
 
 ## Demos
 - [Proxmox: Clones VMs from template](./demos/proxmox_kvm_clone.yml)<br>Clone a VM and create one or more copies

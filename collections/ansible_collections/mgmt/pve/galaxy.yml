@@ -5,7 +5,7 @@
 namespace: mgmt
 
 # The name of the collection. Has the same character restrictions as 'namespace'
-name: windows
+name: pve
 
 # The version of the collection. Must be compatible with semantic versioning
 version: 1.0.0
@@ -21,7 +21,7 @@ authors:
 
 ### OPTIONAL but strongly recommended
 # A short summary description of the collection
-description: Windows info content
+description: Proxmox virtual environment management roles
 
 # Either a single license or a list of licenses for content inside of a collection. Ansible Galaxy currently only
 # accepts L(SPDX,https://spdx.org/licenses/) licenses. This key is mutually exclusive with 'license_file'
@@ -35,10 +35,9 @@ license_file: ''
 # A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
 # requirements as 'namespace' and 'name'
 tags:
-  - windows
-  - info
-  - smb
-  - shares
+  - proxmox
+  - kvm
+  - pve
 
 # Collections that this collection requires to be installed for it to be usable. The key of the dict is the
 # collection label 'namespace.name'. The value is a version range
@@ -47,7 +46,7 @@ tags:
 dependencies: {}
 
 # The URL of the originating SCM repository
-repository: http://example.com/repository
+repository: https://github.com/zjleblanc/ansible-windows-mgmt
 
 # The URL to any online docs
 documentation: http://docs.example.com

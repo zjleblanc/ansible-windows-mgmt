@@ -48,7 +48,7 @@
 
     - name: Describe instance | proxmox snapshot
       ansible.builtin.include_role:
-        name: proxmox_kvm_decomm
+        name: mgmt.pve.proxmox_kvm_decomm
       vars:
         proxmox_kvm_decomm_name: "{{ inventory_hostname.split('.')[0] }}"
 
