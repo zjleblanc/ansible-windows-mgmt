@@ -27,6 +27,8 @@ Objectives:
 | SN_PASSWORD | s3cr3t | YES |
 | CONTROLLER_HOST | https://controller.example.com | YES |
 
+Refer to example [Service Now](https://docs.autodotes.com/Ansible/Credential%20Types/service_now/) custom credential type
+
 #### Extra Variables
 
 | Name | Default | Required |

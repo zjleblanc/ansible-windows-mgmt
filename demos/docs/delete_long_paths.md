@@ -2,7 +2,7 @@
 
 Requirements:
 - Active Directory domain controller
-- AD administrator credentials
+- [Windows Domain Admin](https://docs.autodotes.com/Ansible/Credential%20Types/microsoft_ad_admin/) custom credential
 
 Objectives:
 1. Setup directories with long file paths (optional if already exist)

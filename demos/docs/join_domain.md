@@ -2,7 +2,7 @@
 
 Requirements:
 - Active Directory domain controller
-- AD administrator credentials
+- [Windows Domain Admin](https://docs.autodotes.com/Ansible/Credential%20Types/microsoft_ad_admin/) custom credential
 
 Objectives:
 1. Configure DNS settings
@@ -14,11 +14,8 @@ Objectives:
 
 [join_domain.yml](../join_domain.yml)
 
-1. Uses a windows domain admin custom credential type to pass in credentials:
-    - win_domain
-    - win_domain_admin
-    - win_domain_admin_password
-1. Configure the domain controller dns entry<br>
+1. Uses a [Windows Domain Admin](https://docs.autodotes.com/Ansible/Credential%20Types/microsoft_ad_admin/) custom credential type to pass in credentials
+2. Configure the domain controller dns entry<br>
     `domain_controller: <inventory hostname of your domain controller>`
     ```yaml
     - name: Configure name servers
@@ -27,4 +24,4 @@ Objectives:
             -InterfaceIndex 6 \
             -ServerAddresses ("{{ hostvars[domain_controller]['ansible_host'] }}","192.168.0.1")
     ```
-1. Join the domain and update inventory
+3. Join the domain and update inventory

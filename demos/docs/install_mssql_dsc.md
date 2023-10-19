@@ -4,7 +4,7 @@ Adapted from [role](https://github.com/kkolk/mssql) developed by @kkolk
 
 Requirements:
 - Active Directory domain controller
-- AD administrator credentials
+- [Windows Domain Admin](https://docs.autodotes.com/Ansible/Credential%20Types/microsoft_ad_admin/) custom credential
 
 Objectives:
 1. Install SQL Server dependencies

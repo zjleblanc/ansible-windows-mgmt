@@ -11,13 +11,9 @@ Objectives:
 
 [Playbook](../proxmox_kvm_clone.yml)
 
-1. Uses a proxmox custom credential type to pass in API credentials:
-    - proxmox_api_host
-    - proxmox_api_user
-    - proxmox_api_token_id
-    - proxmox_api_token_secret
+1. Uses a [Proxmox VE](https://docs.autodotes.com/Ansible/Credential%20Types/proxmox/) custom credential type to pass in API credentials
 
-1. Executes proxmox_kvm role to create new instances based on provided configs:
+2. Executes proxmox_kvm role to create new instances based on provided configs:
     ```yaml
     ---
     # example
@@ -33,7 +29,7 @@ Objectives:
         - yaml-config
     ```
 
-1. Retrieves the ip for newly created instance (requires agent: true) and adds to `needs_winrm` group in inventory
+3. Retrieves the ip for newly created instance (requires agent: true) and adds to `needs_winrm` group in inventory
 
 ### setup_winrm.yml
 
