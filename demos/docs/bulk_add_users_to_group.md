@@ -1,5 +1,7 @@
 # Bulk Add Users to AD Group
 
+This demo is useful when dealing with large lists of input user accounts (10e2) in a large Active Directory Domain (10e3 objects). A typical powershell script may check each account in the list to make sure it exists, and then add the user to a target group. That method does *not* scale and this playbook takes an alternative approach to check for existence in memory (as opposed to one-by-one requests) and add the existing users in a bulk operation. Tested with 500+ input users of which 50+ were invalid this playbook executed in <2 min.
+
 Requirements:
 - Active Directory domain controller
 - AD administrator credentials

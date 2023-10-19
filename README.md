@@ -23,3 +23,4 @@ Ansible repository for content used to manage Windows servers
 | Windows: Patch servers | Beginner level patching implementation | [📖](./demos/patch.yml) |
 | Windows: Delete Long Folder Paths | Delete folders on Windows servers with long file paths exceeding the default limit | [📖](./demos/docs/delete_long_paths.md) |
 | Windows: Install SQL Server using DSC | Install Microsoft SQL Server on a Windows host using Desired State Configuration (DSC) | [📖](./demos/docs/install_mssql_dsc.md) |
+| Windows: Bulk Add Users to AD Group | Add a large list of users to an AD group after checking they exist (with reasonable performance) | [📖](./demos/docs/bulk_add_users_to_group.md) |
