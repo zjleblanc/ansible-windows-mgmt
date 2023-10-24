@@ -1,0 +1,14 @@
+# Name the file microsoft.ad.ldap.yml
+
+plugin: microsoft.ad.ldap
+
+### Supplied by custom credential type ###
+# server: 
+# port:
+# username:
+# password:
+### End custom credential type ###
+
+search_base: OU=Computers,OU=lab,DC=autodotes,DC=local
+
+# see plugin documentation for additional configuration properties for filtering, grouping, etc.
