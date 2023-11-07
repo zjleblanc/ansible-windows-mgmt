@@ -7,10 +7,10 @@ Ansible repository for content used to manage Windows servers
 
 | FCQN | Description | Docs |
 | --- | --- | :---: |
-| `mgmt.snow_configuration.records` | Wrap the Service Now Table API module to be **idempotent** | [📖](./ansible_collections/mgmt/snow_configuration/roles/records/README.md) |
-| `mgmt.windows.mssql` | This role installs PowerShell requirements and adds Windows features required  for SQL Server before completing an installation of a SQL Server instance using  desired state configuration | [📖](./ansible_collections/mgmt/windows/roles/mssql/README.md) |
-| `mgmt.windows.patch` | Apply updates to a Windows server| [📖](./ansible_collections/mgmt/windows/roles/patch/README.md) |
-| `mgmt.pve.proxmox_kvm` | Provision a Proxmox KVM| [📖](./ansible_collections/mgmt/pve/roles/proxmox_kvm/README.md) |
+| `mgmt.snow_configuration.records` | Wrap the Service Now Table API module to be **idempotent** | [📖](./collections/ansible_collections/mgmt/snow_configuration/roles/records/README.md) |
+| `mgmt.windows.mssql` | This role installs PowerShell requirements and adds Windows features required  for SQL Server before completing an installation of a SQL Server instance using  desired state configuration | [📖](./collections/ansible_collections/mgmt/windows/roles/mssql/README.md) |
+| `mgmt.windows.patch` | Apply updates to a Windows server| [📖](./collections/ansible_collections/mgmt/windows/roles/patch/README.md) |
+| `mgmt.pve.proxmox_kvm` | Provision a Proxmox KVM| [📖](./collections/ansible_collections/mgmt/pve/roles/proxmox_kvm/README.md) |
 
 ## Demos
 
