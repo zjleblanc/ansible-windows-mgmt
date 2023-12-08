@@ -95,7 +95,7 @@
 
 - name: Get agent network interfaces
   register: r_kvm_net_interfaces
-  retries: 10
+  retries: 20
   delay: 10
   until: 
     - r_kvm_net_interfaces.status == 200

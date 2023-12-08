@@ -1,9 +1,12 @@
 .venv/
+.grapher/
 .vscode/
 ansible.cfg
 demos/local_vars/
 *.cert
 *.log
+*.svg
+*.reg
 
 **/__pycache__/**
 **/.DS_Storeinventories/microsoft.ad.ldap.yml

@@ -1,0 +1,29 @@
+---
+- name: Bulk edit registry keys
+  hosts: regedit-demo-1
+  gather_facts: false
+
+  vars:
+    temp_dir: C:\Users\Administrator\AppData\Local\Temp
+
+  tasks:
+    # - name: Get example reg file
+    #   ansible.builtin.fetch:
+    #     src: C:\Users\Administrator\Documents\example.reg
+    #     dest: "{{ playbook_dir }}/example.reg"
+    #     flat: true
+
+    - name: Create a file from a Jinja2 template
+      ansible.windows.win_template:
+        src: demo-settings.reg.j2
+        dest: "{{ temp_dir }}\\demo-settings.reg"
+
+    - name: Compare and merge registry file
+      register: r_regmerge
+      community.windows.win_regmerge:
+        path: "{{ temp_dir }}\\demo-settings.reg"
+        compare_to: HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem
+
+    - name: Audit changes
+      ansible.builtin.debug:
+        var: r_regmerge
