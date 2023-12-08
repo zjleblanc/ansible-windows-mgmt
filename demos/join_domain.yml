@@ -11,21 +11,21 @@
       ansible.builtin.wait_for_connection:
         timeout: 60
 
+    - name: Disable ipv6
+      ansible.windows.win_powershell: 
+        script: Disable-NetAdapterBinding -Name 'Ethernet Instance 0' -ComponentId ms_tcpip6
+    
+    - name: Configure domain controller as nameserver
+      ansible.windows.win_dns_client:
+        adapter_names: Ethernet*
+        dns_servers: 
+          - "{{ hostvars[domain_controller]['ansible_host'] }}"
+          - 192.168.0.1
+
     - name: Join Autodotes domain
       when: join_domain | default(false)
       throttle: 1
       block:
-        - name: Disable ipv6
-          ansible.windows.win_powershell: 
-            script: Disable-NetAdapterBinding -Name 'Ethernet Instance 0' -ComponentId ms_tcpip6
-        
-        - name: Configure domain controller as nameserver
-          ansible.windows.win_dns_client:
-            adapter_names: Ethernet*
-            dns_servers: 
-              - "{{ hostvars[domain_controller]['ansible_host'] }}"
-              - 192.168.0.1
-
         - name: Remove legacy dns entries
           delegate_to: "{{ domain_controller }}"
           register: r_dns_entry
@@ -59,19 +59,19 @@
 
         # Make sure DNS entries are present for new hosts
         
-        - name: Reboot to complete domain join
-          ansible.builtin.win_reboot:
-            reboot_timeout: 7200
-            post_reboot_delay: 30
+    - name: Reboot to complete domain join
+      ansible.builtin.win_reboot:
+        reboot_timeout: 7200
+        post_reboot_delay: 30
 
-        - name: Remove host vars to use windows group vars
-          delegate_to: localhost
-          ansible.controller.host:
-            name: "{{ inventory_hostname }}"
-            inventory: "Proxmox Inventory"
-            state: present
-            enabled: true
-            variables: 
-              domain_name: "{{ win_domain }}"
-              domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
-              domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+    - name: Remove host vars to use windows group vars
+      delegate_to: localhost
+      ansible.controller.host:
+        name: "{{ inventory_hostname }}"
+        inventory: "Proxmox Inventory"
+        state: present
+        enabled: true
+        variables: 
+          domain_name: "{{ win_domain }}"
+          domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
+          domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
