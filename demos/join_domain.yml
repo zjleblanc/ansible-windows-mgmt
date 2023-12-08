@@ -28,6 +28,7 @@
       block:
         - name: Remove legacy DNS entries
           delegate_to: "{{ domain_controller }}"
+          tags: cleanup
           register: r_dns_entry
           loop: ['A','AAAA']
           loop_control:
@@ -40,6 +41,7 @@
 
         - name: Remove legacy object from domain
           delegate_to: "{{ domain_controller }}"
+          tags: cleanup
           community.windows.win_domain_computer:
             name: "{{ inventory_hostname.split('.')[0] }}"
             state: absent
@@ -89,3 +91,11 @@
           domain_name: "{{ win_domain }}"
           domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
           domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+
+    - name: Add host to windows group
+      delegate_to: localhost
+      ansible.builtin.include: tasks/add_host_to_group.yml
+      vars:
+        group_name: windows
+        group_desc: Windows VMs in proxmox
+        group_inventory: Proxmox Inventory
