@@ -66,11 +66,14 @@
           community.windows.win_dns_record:
             name: "{{ inventory_hostname.split('.')[0] }}"
             type: "{{ type }}"
+            value: "{{ ansible_host }}"
             zone: "{{ win_domain }}"
             state: present
         
     - name: Reboot to complete domain join
-      when: not skip_reboot|default(false)
+      when: 
+        - r_domain_membership.reboot_required
+        - not skip_reboot|default(false)
       ansible.builtin.win_reboot:
         reboot_timeout: 7200
         post_reboot_delay: 30
