@@ -26,7 +26,7 @@
       when: join_domain | default(false)
       throttle: 1
       block:
-        - name: Remove legacy dns entries
+        - name: Remove legacy DNS entries
           delegate_to: "{{ domain_controller }}"
           register: r_dns_entry
           loop: ['A','AAAA']
@@ -57,9 +57,9 @@
             domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
             state: domain
 
-        - name: Remove legacy dns entries
+        - name: Add DNS entries
           delegate_to: "{{ domain_controller }}"
-          register: r_dns_entry
+          register: r_add_dns_entry
           loop: ['A','AAAA']
           loop_control:
             loop_var: type
@@ -79,6 +79,7 @@
         post_reboot_delay: 30
 
     - name: Remove host vars to use windows group vars
+      when: r_add_dns_entry is not failed
       delegate_to: localhost
       ansible.controller.host:
         name: "{{ inventory_hostname }}"
