@@ -57,9 +57,20 @@
             domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
             state: domain
 
-        # Make sure DNS entries are present for new hosts
+        - name: Remove legacy dns entries
+          delegate_to: "{{ domain_controller }}"
+          register: r_dns_entry
+          loop: ['A','AAAA']
+          loop_control:
+            loop_var: type
+          community.windows.win_dns_record:
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            type: "{{ type }}"
+            zone: "{{ win_domain }}"
+            state: present
         
     - name: Reboot to complete domain join
+      when: not skip_reboot|default(false)
       ansible.builtin.win_reboot:
         reboot_timeout: 7200
         post_reboot_delay: 30
