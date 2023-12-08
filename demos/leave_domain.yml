@@ -42,17 +42,9 @@
             name: "{{ inventory_hostname.split('.')[0] }}"
             state: absent
 
-    - name: Delete host (remove from windows group)
+    - name: Remove host from windows group
       delegate_to: localhost
-      ansible.controller.host:
-        name: "{{ inventory_hostname }}"
-        inventory: "Proxmox Inventory"
-        state: absent
-        
-    - name: Add host back to inventory
-      delegate_to: localhost
-      ansible.controller.host:
-        name: "{{ inventory_hostname }}"
-        inventory: "Proxmox Inventory"
-        state: present
-        enabled: true
+      ansible.builtin.include: tasks/remove_host_from_group.yml
+      vars:
+        group_name: windows
+        group_inventory: Proxmox Inventory
