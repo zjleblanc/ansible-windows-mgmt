@@ -60,12 +60,11 @@
         - name: Add DNS entries
           delegate_to: "{{ domain_controller }}"
           register: r_add_dns_entry
-          loop: ['A','AAAA']
           loop_control:
             loop_var: type
           community.windows.win_dns_record:
             name: "{{ inventory_hostname.split('.')[0] }}"
-            type: "{{ type }}"
+            type: A
             value: "{{ ansible_host }}"
             zone: "{{ win_domain }}"
             state: present
