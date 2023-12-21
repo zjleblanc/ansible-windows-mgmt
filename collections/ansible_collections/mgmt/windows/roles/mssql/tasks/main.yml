@@ -10,7 +10,14 @@
 - name: Assert domain controller is defined in inventory
   tags: always
   ansible.builtin.assert:
-    that: domain_controller in hostvars
+    that: mssql_domain_controller in hostvars
+
+- name: Disable Teredo protocol to prevent RPC availability errors
+  ansible.windows.win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters
+    name: DisabledComponents
+    type: dword
+    data: 8
 
 - name: Set up PowerShell for fetching modules
   tags: prereqs
@@ -54,7 +61,7 @@
     state: present
 
 - name: Active Directory | Ensure SQL Service account is present
-  delegate_to: "{{ domain_controller }}"
+  delegate_to: "{{ mssql_domain_controller }}"
   tags: service_account
   community.windows.win_domain_user:
     name: "{{ mssql_sqlsvc_account | regex_search('[^\\\\]*$') }}"
@@ -70,7 +77,7 @@
       - Domain Users
 
 - name: Active Directory | Ensure SQL Agent Service account is present
-  delegate_to: "{{ domain_controller }}"
+  delegate_to: "{{ mssql_domain_controller }}"
   tags: service_account
   community.windows.win_domain_user:
     name: "{{ mssql_agentsvc_account | regex_search('[^\\\\]*$') }}"
@@ -126,6 +133,10 @@
 
 - name: Install SQL Server
   tags: install
+  register: r_install_mssql
+  retries: 2
+  until: r_install_mssql is not failed
+  delay: 30
   ansible.windows.win_dsc:
     resource_name: SQLSetup
     Action: Install
@@ -253,32 +264,3 @@
       InstanceName: "{{ mssql_instance_name }}"
       OptionName: max degree of parallelism
       OptionValue: "{{ mssql_max_degree_of_parallelism }}"
-
-- name: "Ensure {{ domain_controller }} has SqlServer module"
-  delegate_to: "{{ domain_controller }}"
-  tags:
-    - test
-    - test_sql
-  community.windows.win_psmodule:
-    name: SqlServer
-    state: present
-    accept_license: true
-
-- name: "Test connection with SQL query from {{ domain_controller }}"
-  delegate_to: "{{ domain_controller }}"
-  tags:
-    - test
-    - test_sql
-  register: r_test_sql
-  ansible.windows.win_shell: >
-    Invoke-SqlCmd -Query "SELECT GETDATE() AS TimeOfQuery"
-      -Server "{{ hostvars[inventory_hostname]['ansible_host'] }}"
-      -TrustServerCertificate
-
-- name: Print SQL output
-  delegate_to: localhost
-  tags:
-    - test
-    - test_sql
-  ansible.builtin.debug:
-    var: r_test_sql.stdout_lines
