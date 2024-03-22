@@ -9,4 +9,5 @@ demos/local_vars/
 *.reg
 
 **/__pycache__/**
-**/.DS_Storeinventories/microsoft.ad.ldap.yml
+**/.DS_Store
+inventories/microsoft.ad.ldap.yml
