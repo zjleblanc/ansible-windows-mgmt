@@ -6,4 +6,4 @@
   tasks:
     - name: Print message
       ansible.builtin.debug:
-        msg: "{{ _msg | default('No message provided') }}"
+        msg: "{{ _msg | default(snow_msg) | default('No message provided') }}"
