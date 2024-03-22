@@ -7,15 +7,22 @@
   #     msg: "{{ vault_ansible_password }}"
   #     var: ansible_facts 
 
-  - name: get powershell version linux
-    shell: |
-      $ver = $PSVersionTable
-      return $PSVersionTable.PSVersion.Major
-    args:
-      executable: /usr/bin/pwsh
-    register: ps_major_version
-    delegate_to: localhost
+    - name: Run PowerShell script
+      register: r_pwsh
+      ansible.windows.win_powershell:
+        script: "{{ lookup('template', 'powershell.ps1.j2') }}"
+      environment:
+        SECRET_TOKEN: "{{ generic_token }}"
+
+  # - name: get powershell version linux
+  #   shell: |
+  #     $ver = $PSVersionTable
+  #     return $PSVersionTable.PSVersion.Major
+  #   args:
+  #     executable: /usr/bin/pwsh
+  #   register: ps_major_version
+  #   delegate_to: localhost
     
-  - name: print powershell version
-    debug:
-      var: ps_major_version.stdout  
+    - name: print powershell version
+      debug:
+        var: r_pwsh  
