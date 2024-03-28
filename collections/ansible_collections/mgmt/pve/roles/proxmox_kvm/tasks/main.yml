@@ -97,14 +97,14 @@
   register: r_kvm_net_interfaces
   retries: 20
   delay: 10
-  until: 
+  until:
     - r_kvm_net_interfaces.status == 200
     - r_kvm_net_interfaces.json.data.result is pve_local_ip
   ansible.builtin.uri:
     url: "{{ proxmox_api_base_url }}/nodes/pve/qemu/{{ r_kvm.vmid }}/agent/network-get-interfaces"
     method: GET
     headers:
-      Authorization: "PVEAPIToken={{ proxmox_api_user }}!{{ proxmox_api_token_id }}={{ proxmox_api_token_secret }}"
+      Authorization: PVEAPIToken={{ proxmox_api_user }}!{{ proxmox_api_token_id }}={{ proxmox_api_token_secret }}
 
 - name: Extract kvm ipv4 addresses
   ansible.builtin.set_fact:
@@ -113,8 +113,8 @@
 - name: Add host to proxmox inventory
   ansible.controller.host:
     name: "{{ pve_config.name }}.{{ proxmox_kvm_domain }}"
-    description: "Created by ansible"
-    inventory: "Proxmox Inventory"
+    description: Created by ansible
+    inventory: Proxmox Inventory
     state: present
     enabled: true
     variables:
@@ -137,7 +137,7 @@
     url: "{{ lookup('env', 'CONTROLLER_HOST') }}/api/v2/groups/{{ r_winrm_group.id }}/all_hosts"
     method: GET
     headers:
-      Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
+      Authorization: Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}
 
 - name: Add host to needs_winrm group
   ansible.controller.group:
@@ -153,10 +153,10 @@
     hostname: "{{ r_kvm_net_interfaces.json.data.result | extract_pve_local_ip }}"
     connection_username: "{{ proxmox_default_user }}"
     connection_password: "{{ proxmox_default_password }}"
-    encrypt: yes
+    encrypt: true
     executable: powershell.exe
-    arguments: '-'
-    stdin: |
+    arguments: "-"
+    stdin: |-
       $ErrorActionPreference = "Stop"
       $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
       $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
