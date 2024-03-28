@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    search_root: "DC=autodotes,DC=local"
+    search_root: DC=autodotes,DC=local
     target_group: Austin
     servers: |
       win11-guest-1
@@ -19,4 +19,3 @@
         loop_var: server
       ansible.builtin.include_tasks:
         file: tasks/get_share_stats.yml
-

@@ -1,7 +1,7 @@
 ---
 - hosts: all
   gather_facts: true
- 
+
   tasks:
   # - debug:
   #     msg: "{{ vault_ansible_password }}"
@@ -14,15 +14,15 @@
       environment:
         SECRET_TOKEN: "{{ generic_token }}"
 
-  # - name: get powershell version linux
-  #   shell: |
-  #     $ver = $PSVersionTable
-  #     return $PSVersionTable.PSVersion.Major
-  #   args:
-  #     executable: /usr/bin/pwsh
-  #   register: ps_major_version
-  #   delegate_to: localhost
-    
+    # - name: get powershell version linux
+    #   shell: |
+    #     $ver = $PSVersionTable
+    #     return $PSVersionTable.PSVersion.Major
+    #   args:
+    #     executable: /usr/bin/pwsh
+    #   register: ps_major_version
+    #   delegate_to: localhost
+
     - name: print powershell version
       debug:
-        var: r_pwsh  
+        var: r_pwsh
