@@ -1,0 +1,42 @@
+# Pass in inventory hostname for your domain controller as _host
+---
+- name: Get share stats
+  hosts: "{{ _host | default('domaincontroller') }}"
+  gather_facts: false
+
+  vars:
+    # Define a list of servers to query share information
+    # These servers must be reachable from the domain controller
+    server_list:
+      - win11-guest-1
+      - win11-guest-2
+
+  tasks:
+    - name: "Report on shared folders | {{ server }}"
+      loop: "{{ server_list }}"
+      loop_control:
+        loop_var: server
+      register: r_share_info
+      ansible.windows.win_powershell:
+        script: |
+          $Ansible.Result["folder_sizes"] = @()
+          $Ansible.Changed = $false;
+          $shares = (net view \\{{ server}}) -match '\sDisk\s' -replace '\s+Disk.*'
+
+          foreach($share in $shares) {
+            $children = Get-ChildItem -LiteralPath "\\{{ server}}\$share" | Where PSIsContainer | Select-Object -Property FullName
+            foreach($child in $children) {
+              $size = (Get-ChildItem -Path $child.FullName -File -Recurse | Measure-Object -Property Length -Sum).Sum
+              $Ansible.Result["folder_sizes"] += [PSCustomObject]@{
+                Server = "{{ server}}"
+                Share = $share
+                FolderName = $child.FullName
+                SizeBytes = if ($size -eq $null) { 0 } else { $size }
+              }
+              $Ansible.Changed = $true;
+            }
+          }
+    
+    - name: Print structure Powershell result
+      ansible.builtin.debug:
+        var: r_share_info
