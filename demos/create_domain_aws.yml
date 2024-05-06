@@ -6,7 +6,7 @@
   tasks:
     - name: Assert required parameters
       ansible.builtin.assert:
-        that: 
+        that:
           - dns_domain_name is defined
 
     - name: Set Local Admin Password
@@ -32,9 +32,9 @@
         name: "{{ item.name }}"
         scope: global
       loop: "{{ ad_groups | default([]) }}"
-        # - "GroupA"
-        # - "GroupB"
-        # - "GroupC"
+      # - "GroupA"
+      # - "GroupB"
+      # - "GroupC"
       retries: 5
       delay: 10
 
@@ -45,12 +45,12 @@
         password: "{{ lookup('community.general.random_string', min_lower=1, min_upper=1, min_special=1, min_numeric=1) }}"
         update_password: on_create
       loop: "{{ ad_users | default([]) }}"
-        # - name: "UserA"
-        #   groups: "GroupA"
-        # - name: "UserB"
-        #   groups: "GroupB"
-        # - name: "UserC"
-        #   groups: "GroupC"
+      # - name: "UserA"
+      #   groups: "GroupA"
+      # - name: "UserB"
+      #   groups: "GroupB"
+      # - name: "UserC"
+      #   groups: "GroupC"
       retries: 5
       delay: 10
 

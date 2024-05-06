@@ -1,20 +1,20 @@
 ---
-- name: "Create {{ group_name }} group"
+- name: Create {{ group_name }} group
   register: r_group_details
   ansible.controller.group:
     name: "{{ group_name }}"
     description: "{{ group_desc | default('created by ansible') }}"
     inventory: "{{ group_inventory }}"
 
-- name: "Check for existing hosts in {{ group_name }} group"
+- name: Check for existing hosts in {{ group_name }} group
   register: r_existing_hosts
   uri:
     url: "{{ lookup('env', 'CONTROLLER_HOST') }}/api/v2/groups/{{ r_group_details.id }}/all_hosts"
     method: GET
     headers:
-      Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
+      Authorization: Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}
 
-- name: "Add host to {{ group_name }} group"
+- name: Add host to {{ group_name }} group
   ansible.controller.group:
     name: "{{ group_name }}"
     inventory: "{{ group_inventory }}"

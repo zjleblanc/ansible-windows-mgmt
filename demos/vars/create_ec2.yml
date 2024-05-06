@@ -1,7 +1,7 @@
 ---
-aws_region: "us-east-2"
-ec2_ami_filter: "Windows_Server-2019-English-Core-Base*"
-ec2_instance_type: "t2.micro"
+aws_region: us-east-2
+ec2_ami_filter: Windows_Server-2019-English-Core-Base*
+ec2_instance_type: t2.micro
 ec2_instance_tags: {}
 ec2_instance_tags_default:
   Name: "{{ ec2_instance_name }}"
