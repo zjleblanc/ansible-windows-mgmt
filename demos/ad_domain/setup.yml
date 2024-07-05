@@ -1,0 +1,66 @@
+---
+- name: Provision AWS Infrastructure
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - vars/create_infra.yml
+
+  tasks:
+    - name: Assert required parameters
+      ansible.builtin.include_tasks:
+        file: tasks/create_infra.yml
+
+- name: Provision Domain Controller
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - vars/create_infra.yml
+    - vars/create_dc.yml
+
+  tasks:
+    - name: Assert required parameters
+      ansible.builtin.include_tasks:
+        file: tasks/create_ec2.yml
+
+- name: Configure Domain Controller
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - vars/config_domain.yml
+    - vars/customize_domain.yml
+
+  tasks:
+    - name: Assert required parameters
+      ansible.builtin.include_tasks:
+        file: tasks/config_domain.yml
+
+  handlers:
+    - name: Reboot host
+      ansible.windows.win_reboot:
+        reboot_timeout: 3600
+
+    - name: Wait for AD services
+      community.windows.win_wait_for_process:
+        process_name_exact: Microsoft.ActiveDirectory.WebServices
+        pre_wait_delay: 60
+        state: present
+        timeout: 600
+        sleep: 10
+
+    - name: Reboot again
+      ansible.windows.win_reboot:
+        reboot_timeout: 3600
+
+    - name: Wait for AD services again
+      community.windows.win_wait_for_process:
+        process_name_exact: Microsoft.ActiveDirectory.WebServices
+        pre_wait_delay: 60
+        state: present
+        timeout: 600
+        sleep: 10

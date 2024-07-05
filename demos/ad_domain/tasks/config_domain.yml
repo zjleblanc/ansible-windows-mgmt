@@ -1,0 +1,19 @@
+---
+- name: Wait for target to become reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+
+- name: Set Local Admin Password
+  ansible.windows.win_user:
+    name: "{{ domain_admin_user }}"
+    password: "{{ domain_admin_password | default(ansible_password) }}"
+
+- name: Create new domain in a new forest on the target host
+  ansible.windows.win_domain:
+    dns_domain_name: "{{ dns_domain_name }}"
+    safe_mode_password: "{{ lookup('community.general.random_string', min_lower=1, min_upper=1, min_special=1, min_numeric=1) }}"
+  notify:
+    - Reboot host
+    - Wait for AD services
+    - Reboot again
+    - Wait for AD services again

@@ -1,0 +1,20 @@
+---
+aws_region: "us-east-2"
+ec2_ami_filter: "Windows_Server-2022-English-Full-Base*"
+ec2_instance_type: "t2.medium"
+ec2_instance_name: "dc01.autodotes.com"
+ec2_instance_tags:
+  role: kdc
+ec2_instance_tags_default:
+  Name: "{{ ec2_instance_name }}"
+  provisioner: ansible
+  owner: zleblanc@redhat.com
+ec2_userdata_tmpl: win_ec2_userdata
+ec2_assign_public_ip: true
+ec2_wait: true
+ec2_count: 1
+
+ec2_vpc_name: "{{ aws_vpc_name }}"
+ec2_subnet_name: "{{ aws_vpc_name }}-subnet"
+ec2_security_group_name: "{{ aws_vpc_name }}-sg"
+ec2_key_pair_name: "zleblanc-redhat-mac"

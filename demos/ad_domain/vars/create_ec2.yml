@@ -11,6 +11,7 @@ ec2_userdata_tmpl: win_ec2_userdata
 ec2_assign_public_ip: true
 ec2_wait: true
 ec2_count: 1
+
 # ec2_vpc_name: "YOUR_VPC_NAME"
 # ec2_subnet_name: "YOUR_SUBNET_NAME"
 # ec2_security_group_name: "YOUR_SECURITY_GROUP_NAME"
