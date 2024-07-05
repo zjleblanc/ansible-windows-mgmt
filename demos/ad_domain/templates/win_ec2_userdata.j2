@@ -25,5 +25,5 @@ $Password = ConvertTo-SecureString {{ ec2_admin_password | default(ansible_passw
 New-LocalUser -Name "ec2-user" -Description "Ansible Service Account" -Password $Password
 Add-LocalGroupMember -Group "Administrators" -Member "ec2-user"
 
-Rename-Computer -NewName {{ ec2_instance_name.split('.')[0] }} -Force -Restart
+Rename-Computer -NewName {{ config.instance_name.split('.')[0] }} -Force -Restart
 </powershell>

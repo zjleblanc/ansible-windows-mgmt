@@ -8,13 +8,16 @@ aws_instance_tags_default:
   provisioner: ansible
   owner: zleblanc@redhat.com
 
-dc_config:
-  ami_filter: "Windows_Server-2022-English-Full-Base*"
-  assign_public_ip: true
-  assign_elastic_ip: true
+nodes:
+- instance_name: winston.autodotes.com
+  ami_filter: "Windows_Server-2019-English-Core-Base*"
+  instance_type: "t2.micro"
+  instance_tags: {}
+  instance_tags_default:
+    Name: "winston.autodotes.com"
+    provisioner: ansible
+    owner: zleblanc@redhat.com
   userdata_tmpl: win_ec2_userdata
+  assign_public_ip: true
+  assign_elastic_ip: false
   wait: true
-  instance_type: "t2.medium"
-  instance_name: "dc01.autodotes.com"
-  instance_tags:
-    role: kdc

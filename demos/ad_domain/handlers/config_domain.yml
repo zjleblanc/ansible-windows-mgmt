@@ -1,0 +1,24 @@
+---
+- name: Reboot host
+  ansible.windows.win_reboot:
+    reboot_timeout: 3600
+
+- name: Wait for AD services
+  community.windows.win_wait_for_process:
+    process_name_exact: Microsoft.ActiveDirectory.WebServices
+    pre_wait_delay: 60
+    state: present
+    timeout: 600
+    sleep: 10
+
+- name: Reboot again
+  ansible.windows.win_reboot:
+    reboot_timeout: 3600
+
+- name: Wait for AD services again
+  community.windows.win_wait_for_process:
+    process_name_exact: Microsoft.ActiveDirectory.WebServices
+    pre_wait_delay: 60
+    state: present
+    timeout: 600
+    sleep: 10

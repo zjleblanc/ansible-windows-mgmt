@@ -6,61 +6,65 @@
 
   vars_files:
     - vars/create_infra.yml
+    - vars/create_dc.yml
+    - vars/create_nodes.yml
+    - vars/secrets_ec2.yml
 
   tasks:
-    - name: Assert required parameters
+    - name: Create infrastructure (network)
       ansible.builtin.include_tasks:
         file: tasks/create_infra.yml
 
-- name: Provision Domain Controller
-  hosts: localhost
-  become: false
-  gather_facts: false
-
-  vars_files:
-    - vars/create_infra.yml
-    - vars/create_dc.yml
-
-  tasks:
-    - name: Assert required parameters
+    - name: Provision domain controller
       ansible.builtin.include_tasks:
         file: tasks/create_ec2.yml
+      vars:
+        config: "{{ dc_config }}"
+
+    - name: Record domain controller ip
+      ansible.builtin.set_fact:
+        win_domain_controller_ip: "{{ r_ec2.instances[0].private_ip_address }}"
+
+    - name: Provision additional nodes
+      loop: "{{ nodes }}"
+      loop_control:
+        loop_var: config
+        label: "{{ config.instance_name }}"
+      ansible.builtin.include_tasks:
+        file: tasks/create_ec2.yml
+      vars:
+        add_to_inventory: true
+        add_to_groups: [domain_ou_computers]
 
 - name: Configure Domain Controller
-  hosts: localhost
+  hosts: dc01.autodotes.com
   become: false
   gather_facts: false
 
   vars_files:
     - vars/config_domain.yml
-    - vars/customize_domain.yml
+    - vars/secrets_domain.yml
 
   tasks:
-    - name: Assert required parameters
+    - name: Configure domain controller
       ansible.builtin.include_tasks:
         file: tasks/config_domain.yml
 
   handlers:
-    - name: Reboot host
-      ansible.windows.win_reboot:
-        reboot_timeout: 3600
+    - name: Import handlers
+      ansible.builtin.import_tasks:
+        file: handlers/config_domain.yml
 
-    - name: Wait for AD services
-      community.windows.win_wait_for_process:
-        process_name_exact: Microsoft.ActiveDirectory.WebServices
-        pre_wait_delay: 60
-        state: present
-        timeout: 600
-        sleep: 10
+- name: Join Domain
+  hosts: domain_ou_computers 
+  become: false
+  gather_facts: false
 
-    - name: Reboot again
-      ansible.windows.win_reboot:
-        reboot_timeout: 3600
+  vars_files:
+    - vars/join_domain.yml
+    - vars/secrets_domain.yml
 
-    - name: Wait for AD services again
-      community.windows.win_wait_for_process:
-        process_name_exact: Microsoft.ActiveDirectory.WebServices
-        pre_wait_delay: 60
-        state: present
-        timeout: 600
-        sleep: 10
+  tasks:
+    - name: Join new windows hosts to domain 
+      ansible.builtin.include_tasks:
+        file: tasks/join_domain.yml
