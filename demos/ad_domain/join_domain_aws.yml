@@ -1,0 +1,82 @@
+---
+- name: Join windows server to domain
+  hosts: "{{ ansible_limit | default(omit) }}"
+  gather_facts: false
+
+  tasks:
+    - name: Wait for target to become reachable
+      ansible.builtin.wait_for_connection:
+        timeout: 300
+
+    - name: Disable ipv6
+      ansible.windows.win_powershell: 
+        script: Disable-NetAdapterBinding -Name 'Ethernet' -ComponentId ms_tcpip6
+
+    - name: Configure domain controller as nameserver
+      ansible.windows.win_dns_client:
+        adapter_names: Ethernet*
+        dns_servers: 
+          - "{{ win_domain_controller_ip }}"
+
+    - name: Join Autodotes domain
+      when: join_domain | default(false)
+      throttle: 1
+      block:
+        - name: Remove legacy DNS entries
+          delegate_to: "{{ win_domain_controller }}"
+          tags: cleanup
+          register: r_dns_entry
+          loop: ['A','AAAA']
+          loop_control:
+            loop_var: type
+          community.windows.win_dns_record:
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            type: "{{ type }}"
+            zone: "{{ win_domain }}"
+            state: absent
+
+        - name: Remove legacy object from domain
+          delegate_to: "{{ win_domain_controller }}"
+          tags: cleanup
+          community.windows.win_domain_computer:
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            state: absent
+
+        - name: Ensure Demo OU exists
+          delegate_to: "{{ win_domain_controller }}"
+          community.windows.win_domain_ou:
+            name: Demo
+            state: present
+
+        - name: Join domain
+          register: r_domain_membership
+          # retries: 3
+          # delay: 20
+          # until: r_domain_membership is not failed
+          ansible.windows.win_domain_membership:
+            dns_domain_name: "{{ win_domain }}"
+            hostname: "{{ inventory_hostname.split('.')[0] }}"
+            domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
+            domain_admin_password: "{{ win_domain_admin_password }}"
+            domain_ou_path: "OU=Demo,DC=autodotes,DC=com"
+            state: domain
+
+        - name: Add DNS entries
+          delegate_to: "{{ win_domain_controller }}"
+          register: r_add_dns_entry
+          loop_control:
+            loop_var: type
+          community.windows.win_dns_record:
+            name: "{{ inventory_hostname.split('.')[0] }}"
+            type: A
+            value: "{{ ansible_host }}"
+            zone: "{{ win_domain }}"
+            state: present
+        
+    - name: Reboot to complete domain join
+      when: 
+        - r_domain_membership.reboot_required
+        - not skip_reboot|default(false)
+      ansible.builtin.win_reboot:
+        reboot_timeout: 7200
+        post_reboot_delay: 30
