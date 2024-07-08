@@ -19,6 +19,8 @@
       ansible.builtin.include_tasks:
         file: tasks/create_ec2.yml
       vars:
+        add_to_inventory: true
+        add_to_groups: [domain_controllers]
         config: "{{ dc_config }}"
 
     - name: Record domain controller ip
@@ -38,7 +40,7 @@
         win_domain_controller: "{{ dc_config.instance_name }}"
 
 - name: Configure Domain Controller
-  hosts: dc01.autodotes.com
+  hosts: domain_controllers
   become: false
   gather_facts: false
 
