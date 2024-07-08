@@ -36,10 +36,10 @@
         name: "{{ inventory_hostname.split('.')[0] }}"
         state: absent
 
-    - name: Ensure Demo OU exists
+    - name: Ensure AWS OU exists
       delegate_to: "{{ win_domain_controller }}"
       community.windows.win_domain_ou:
-        name: Computers
+        name: AWS
         state: present
 
     - name: Join domain
@@ -52,7 +52,7 @@
         hostname: "{{ inventory_hostname.split('.')[0] }}"
         domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
         domain_admin_password: "{{ win_domain_admin_password }}"
-        domain_ou_path: "OU=Computers,DC=autodotes,DC=com"
+        domain_ou_path: "OU=AWS,DC=autodotes,DC=com"
         state: domain
 
     - name: Add DNS entries
