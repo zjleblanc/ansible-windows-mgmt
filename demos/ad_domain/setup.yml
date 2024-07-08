@@ -44,7 +44,7 @@
 
   vars:
     ansible_user: ec2-user
-    ansible-password: "{{ ec2_admin_password }}"
+    ansible_password: "{{ ec2_admin_password }}"
     ansible_winrm_transport: credssp
 
   vars_files:
@@ -68,7 +68,7 @@
 
   vars:
     ansible_user: ec2-user
-    ansible-password: "{{ ec2_admin_password }}"
+    ansible_password: "{{ ec2_admin_password }}"
     ansible_winrm_transport: credssp
 
   vars_files:
