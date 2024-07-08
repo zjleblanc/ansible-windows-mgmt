@@ -86,6 +86,6 @@
         name: "{{ config.instance_name }}"
         groups: "{{ add_to_groups }}" 
         ansible_host: "{{ r_ec2.instances[0].public_ip_address }}"
-        win_domain_controller: "{{ win_domain_controller }}"
-        win_domain_controller_ip: "{{ win_domain_controller_ip }}"
         win_private_ip: "{{ r_ec2.instances[0].private_ip_address }}"
+        win_domain_controller: "{{ win_domain_controller | default(omit) }}"
+        win_domain_controller_ip: "{{ win_domain_controller_ip | default(omit) }}"
