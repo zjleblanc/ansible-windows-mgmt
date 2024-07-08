@@ -64,6 +64,7 @@
     - name: Allocate a new EIP and associate
       when: not r_eips.addresses | length
       amazon.aws.ec2_eip:
+        region: "{{ aws_region }}"
         device_id: "{{ r_ec2.instances[0].instance_id }}"
         tags:
           Name: "{{ config.instance_name }}"
