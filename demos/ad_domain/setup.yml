@@ -8,7 +8,7 @@
     - vars/create_infra.yml
     - vars/create_dc.yml
     - vars/create_nodes.yml
-    - vars/secrets_ec2.yml
+    - vars/secrets.yml
 
   tasks:
     - name: Create infrastructure (network)
@@ -35,6 +35,7 @@
       vars:
         add_to_inventory: true
         add_to_groups: [domain_ou_computers]
+        win_domain_controller: "{{ dc_config.instance_name }}"
 
 - name: Configure Domain Controller
   hosts: dc01.autodotes.com
@@ -43,7 +44,7 @@
 
   vars_files:
     - vars/config_domain.yml
-    - vars/secrets_domain.yml
+    - vars/secrets.yml
 
   tasks:
     - name: Configure domain controller
@@ -62,7 +63,7 @@
 
   vars_files:
     - vars/join_domain.yml
-    - vars/secrets_domain.yml
+    - vars/secrets.yml
 
   tasks:
     - name: Join new windows hosts to domain 
