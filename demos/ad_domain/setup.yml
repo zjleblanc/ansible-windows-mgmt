@@ -42,6 +42,11 @@
   become: false
   gather_facts: false
 
+  vars:
+    ansible_user: ec2-user
+    ansible-password: "{{ ec2_admin_password }}"
+    ansible_winrm_transport: credssp
+
   vars_files:
     - vars/config_domain.yml
     - vars/secrets.yml
@@ -60,6 +65,11 @@
   hosts: domain_ou_computers 
   become: false
   gather_facts: false
+
+  vars:
+    ansible_user: ec2-user
+    ansible-password: "{{ ec2_admin_password }}"
+    ansible_winrm_transport: credssp
 
   vars_files:
     - vars/join_domain.yml
