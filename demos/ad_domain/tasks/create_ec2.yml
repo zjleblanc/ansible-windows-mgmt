@@ -55,6 +55,7 @@
 - name: List all EIP addresses
   register: r_eips
   amazon.aws.ec2_eip_info:
+    region: "{{ aws_region }}"
     filters:
       "tag:Name": "{{ config.instance_name }}"
 
