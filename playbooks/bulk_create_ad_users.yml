@@ -17,7 +17,7 @@
         scope: "{{ target_group.scope }}"
         path: "{{ target_group.path }}"
 
-    - name: Ensure users exist 
+    - name: Ensure users exist
       loop: "{{ ad_users }}"
       community.windows.win_domain_user:
         name: "{{ item }}"
@@ -25,7 +25,7 @@
         state: present
         path: OU=testusers,OU=lab,DC=autodotes,DC=local
 
-    - name: "Add valid users to target group | {{ target_group.name }}"
+    - name: Add valid users to target group | {{ target_group.name }}
       tags: add_to_group
       community.windows.win_domain_group_membership:
         name: "{{ target_group.name }}"

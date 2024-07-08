@@ -56,7 +56,7 @@
         file: handlers/config_domain.yml
 
 - name: Join Domain
-  hosts: domain_ou_computers 
+  hosts: domain_ou_computers
   become: false
   gather_facts: false
 
@@ -65,6 +65,6 @@
     - vars/secrets_domain.yml
 
   tasks:
-    - name: Join new windows hosts to domain 
+    - name: Join new windows hosts to domain
       ansible.builtin.include_tasks:
         file: tasks/join_domain.yml
