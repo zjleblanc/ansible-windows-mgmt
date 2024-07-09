@@ -1,6 +1,6 @@
 ---
 - name: Configure Domain Controller
-  hosts: role_domain_controllers
+  hosts: role_domain_controller
   become: false
   gather_facts: false
 

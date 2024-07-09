@@ -1,6 +1,6 @@
 ---
 - name: Join Domain
-  hosts: role_domain_computers 
+  hosts: role_domain_computer
   become: false
   gather_facts: false
 

@@ -20,7 +20,7 @@
         file: tasks/create_ec2.yml
       vars:
         add_to_inventory: true
-        add_to_groups: [role_domain_controllers]
+        add_to_groups: [role_domain_controller]
         config: "{{ dc_config }}"
 
     - name: Record domain controller ip
@@ -38,5 +38,5 @@
         file: tasks/create_ec2.yml
       vars:
         add_to_inventory: true
-        add_to_groups: [role_domain_computers]
+        add_to_groups: [role_domain_computer]
         win_domain_controller: "{{ dc_config.instance_name }}"
