@@ -1,0 +1,13 @@
+---
+- name: Connect via Kerberos
+  hosts: role_domain_computer
+  become: false
+  gather_facts: true
+
+  vars:
+    ansible_winrm_transport: kerberos
+
+  tasks:
+    - name: Output facts gathered via kerberos connection
+      ansible.builtin.debug:
+        var: ansible_facts
