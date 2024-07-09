@@ -1,0 +1,24 @@
+---
+- name: Configure Domain Controller
+  hosts: domain_controllers
+  become: false
+  gather_facts: false
+
+  vars:
+    ansible_user: ec2-user
+    ansible_password: "{{ ec2_admin_password }}"
+    ansible_winrm_transport: credssp
+
+  vars_files:
+    - vars/config_domain.yml
+    - vars/secrets.yml
+
+  tasks:
+    - name: Configure domain controller
+      ansible.builtin.include_tasks:
+        file: tasks/config_domain.yml
+
+  handlers:
+    - name: Import handlers
+      ansible.builtin.import_tasks:
+        file: handlers/config_domain.yml
