@@ -17,4 +17,4 @@ dc_config:
   instance_type: "t2.medium"
   instance_name: "dc01.autodotes.com"
   instance_tags:
-    role: kdc
+    role: domain_controller

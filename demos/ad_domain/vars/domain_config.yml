@@ -1,7 +1,9 @@
 ---
 win_domain: autodotes.com
 win_domain_admin: zach
-# win_domain_admin_password: # in secrets_domain.yml
+# win_domain_admin_password: # in secrets.yml
+win_domain_controller: dc01.autodotes.com
+win_domain_controller_ip: 10.0.2.77
 
 dns_domain_name: "{{ win_domain }}"
 domain_admin_user: "{{ win_domain_admin }}"

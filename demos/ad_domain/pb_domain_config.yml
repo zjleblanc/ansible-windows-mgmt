@@ -10,15 +10,15 @@
     ansible_winrm_transport: credssp
 
   vars_files:
-    - vars/config_domain.yml
+    - vars/domain_config.yml
     - vars/secrets.yml
 
   tasks:
     - name: Configure domain controller
       ansible.builtin.include_tasks:
-        file: tasks/config_domain.yml
+        file: tasks/domain_config.yml
 
   handlers:
     - name: Import handlers
       ansible.builtin.import_tasks:
-        file: handlers/config_domain.yml
+        file: handlers/domain_config.yml

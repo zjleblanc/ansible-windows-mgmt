@@ -1,6 +1,6 @@
 ---
 - name: Join Domain
-  hosts: domain_ou_computers 
+  hosts: domain_computers 
   become: false
   gather_facts: false
 
@@ -10,10 +10,10 @@
     ansible_winrm_transport: credssp
 
   vars_files:
-    - vars/join_domain.yml
+    - vars/domain_join.yml
     - vars/secrets.yml
 
   tasks:
     - name: Join new windows hosts to domain 
       ansible.builtin.include_tasks:
-        file: tasks/join_domain.yml
+        file: tasks/domain_join.yml

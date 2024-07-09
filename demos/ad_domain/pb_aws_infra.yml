@@ -26,6 +26,7 @@
     - name: Record domain controller ip
       ansible.builtin.set_stats:
         data:
+          win_domain_controller: "{{ dc_config.instance_name }}"
           win_domain_controller_ip: "{{ r_ec2.instances[0].private_ip_address }}"
 
     - name: Provision additional nodes
@@ -37,5 +38,5 @@
         file: tasks/create_ec2.yml
       vars:
         add_to_inventory: true
-        add_to_groups: [domain_ou_computers]
+        add_to_groups: [domain_computers]
         win_domain_controller: "{{ dc_config.instance_name }}"
