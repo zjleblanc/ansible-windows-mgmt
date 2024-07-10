@@ -17,3 +17,10 @@
     - Wait for AD services
     - Reboot again
     - Wait for AD services again
+
+- name: Add user to Domain Admins
+  ansible.windows.win_group_membership:
+    name: Domain Admins
+    members:
+      - zach
+    state: present
