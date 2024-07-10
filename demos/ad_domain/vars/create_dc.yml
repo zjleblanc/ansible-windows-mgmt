@@ -15,6 +15,6 @@ dc_config:
   userdata_tmpl: win_ec2_userdata
   wait: true
   instance_type: "t2.medium"
-  instance_name: "dc01.autodotes.com"
+  instance_name: "dc01.ansible.local"
   instance_tags:
     role: domain_controller

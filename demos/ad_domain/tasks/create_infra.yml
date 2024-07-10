@@ -36,6 +36,7 @@
           - 22  # SSH
           - 5986  # WinRM
           - 3389  # RDP
+          - 88  # Kerberos Authentication
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         to_port: -1
@@ -47,7 +48,6 @@
           - 5986  # WinRM
           - 3389  # RDP
           - 53  # DNS
-          - 88  # Kerberos Authentication
           - 135  # RPC
           - 139  # Netlogon
           - 389  # LDAP
