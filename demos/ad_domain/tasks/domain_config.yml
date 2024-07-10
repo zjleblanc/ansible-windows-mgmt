@@ -18,9 +18,14 @@
     - Reboot again
     - Wait for AD services again
 
-- name: Add user to Domain Admins
-  ansible.windows.win_group_membership:
-    name: Domain Admins
+- name: Add members to the group, preserving existing membership
+  microsoft.ad.group:
+    name: "{{ domain_admin_user.split('@')[0] }}"
+    scope: domainlocal
     members:
-      - zach
-    state: present
+      add:
+        - Domain Admins
+        - Domain Users
+    domain_server: "{{ inventory_hostname }}"
+    domain_username: "{{ win_domain_admin }}@{{ win_domain }}"
+    domain_password: "{{ win_domain_admin_password }}"
