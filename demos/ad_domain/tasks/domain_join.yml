@@ -63,7 +63,7 @@
       community.windows.win_dns_record:
         name: "{{ inventory_hostname.split('.')[0] }}"
         type: A
-        value: "{{ win_private_ip | default(private_ip_address) }}"
+        value: "{{ ansible_host }}"
         zone: "{{ win_domain }}"
         state: present
     
