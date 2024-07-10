@@ -18,6 +18,9 @@
     - Reboot again
     - Wait for AD services again
 
+- name: Verify AD services
+  ansible.builtin.meta: flush_handlers
+
 - name: Add members to the group, preserving existing membership
   microsoft.ad.group:
     name: "{{ domain_admin_user.split('@')[0] }}"
