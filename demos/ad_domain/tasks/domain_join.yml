@@ -52,7 +52,7 @@
         hostname: "{{ inventory_hostname.split('.')[0] }}"
         domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
         domain_admin_password: "{{ win_domain_admin_password }}"
-        domain_ou_path: "OU=AWS,DC=autodotes,DC=com"
+        domain_ou_path: "OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}"
         state: domain
 
     - name: Add DNS entries
