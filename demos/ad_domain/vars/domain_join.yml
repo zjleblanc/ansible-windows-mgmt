@@ -1,5 +1,5 @@
 ---
-win_domain: ansible.local
+win_domain: autodotes.com
 win_domain_admin: zach
 # win_domain_admin_password: # in secrets.yml
 

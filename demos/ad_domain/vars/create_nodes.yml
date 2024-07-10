@@ -9,26 +9,26 @@ aws_instance_tags_default:
   owner: zleblanc@redhat.com
 
 nodes:
-- instance_name: winston.ansible.local
+- instance_name: winston.autodotes.com
   ami_filter: "Windows_Server-2019-English-Core-Base*"
   instance_type: "t2.micro"
   instance_tags:
     role: domain_computer
   instance_tags_default:
-    Name: "winston.ansible.local"
+    Name: "winston.autodotes.com"
     provisioner: ansible
     owner: zleblanc@redhat.com
   userdata_tmpl: win_ec2_userdata
   assign_public_ip: true
   assign_elastic_ip: false
   wait: true
-- instance_name: winthrop.ansible.local
+- instance_name: winthrop.autodotes.com
   ami_filter: "Windows_Server-2019-English-Core-Base*"
   instance_type: "t2.micro"
   instance_tags:
     role: domain_computer
   instance_tags_default:
-    Name: "winthrop.ansible.local"
+    Name: "winthrop.autodotes.com"
     provisioner: ansible
     owner: zleblanc@redhat.com
   userdata_tmpl: win_ec2_userdata

@@ -37,6 +37,11 @@
           - 5986  # WinRM
           - 3389  # RDP
           - 88  # Kerberos Authentication
+          - 53  # DNS
+        cidr_ip: 0.0.0.0/0
+      - proto: udp
+        ports:
+          - 53  # DNS
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         to_port: -1
@@ -47,7 +52,6 @@
           - 80  # HTTP
           - 5986  # WinRM
           - 3389  # RDP
-          - 53  # DNS
           - 135  # RPC
           - 139  # Netlogon
           - 389  # LDAP
@@ -61,8 +65,6 @@
         cidr_ip: "{{ aws_vpc_cidr_block }}"
       - proto: udp
         ports:
-          - 53  # DNS
-          - 88  # Kerberos Authentication
           - 123  # NTP
           - 137-138  # Netlogon
           - 389  # LDAP
