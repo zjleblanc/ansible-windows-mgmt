@@ -64,15 +64,6 @@
     reboot_timeout: 7200
     post_reboot_delay: 30
 
-- name: Delete existing Cloudflare DNS entries
-  community.general.cloudflare_dns:
-    record: "{{ inventory_hostname.split('.')[0] }}"
-    type: A
-    value: "{{ ansible_host }}"
-    zone: "{{ win_domain }}"
-    api_token: "{{ cloudflare_api_token }}"
-    state: absent
-
 - name: Add Cloudflare DNS entries
   register: r_add_dns_entry
   delegate_to: localhost
@@ -81,4 +72,6 @@
     type: A
     value: "{{ ansible_host }}"
     zone: "{{ win_domain }}"
+    solo: true
+    proxied: false
     api_token: "{{ cloudflare_api_token }}"
