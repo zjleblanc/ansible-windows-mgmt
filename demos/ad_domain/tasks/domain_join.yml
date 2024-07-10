@@ -29,18 +29,19 @@
         zone: "{{ win_domain }}"
         state: absent
 
-    - name: Remove legacy object from domain
-      delegate_to: "{{ win_domain_controller }}"
-      tags: cleanup
-      community.windows.win_domain_computer:
-        name: "{{ inventory_hostname.split('.')[0] }}"
-        state: absent
-
     - name: Ensure AWS OU exists
       delegate_to: "{{ win_domain_controller }}"
       community.windows.win_domain_ou:
         name: AWS
         state: present
+
+    - name: Remove legacy object from domain
+      delegate_to: "{{ win_domain_controller }}"
+      tags: cleanup
+      microsoft.ad.object:
+        name: "{{ inventory_hostname.split('.')[0] }}"
+        path: "OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}"
+        state: absent
 
     - name: Join domain
       register: r_domain_membership
