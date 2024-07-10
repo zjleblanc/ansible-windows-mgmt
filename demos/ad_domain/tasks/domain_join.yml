@@ -65,6 +65,7 @@
 
 - name: Add Cloudflare DNS entries
   register: r_add_dns_entry
+  delegate_to: localhost
   community.general.cloudflare_dns:
     record: "{{ inventory_hostname.split('.')[0] }}"
     type: A
