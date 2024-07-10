@@ -3,11 +3,6 @@
   ansible.builtin.wait_for_connection:
     timeout: 300
 
-- name: Set Local Admin Password
-  ansible.windows.win_user:
-    name: "{{ domain_admin_user }}"
-    password: "{{ domain_admin_password | default(ansible_password) }}"
-
 - name: Create new domain in a new forest on the target host
   ansible.windows.win_domain:
     dns_domain_name: "{{ dns_domain_name }}"
@@ -21,13 +16,13 @@
 - name: Verify AD services
   ansible.builtin.meta: flush_handlers
 
-- name: Add user to groups
-  loop:
-    - Domain Admins
-    - Domain Users
-  microsoft.ad.group:
-    name: "{{ item }}"
-    scope: domainlocal
-    members:
-      add:
-        - "{{ domain_admin_user.split('@')[0] }}"
+- name: Create admin user
+  microsoft.ad.user:
+    identity: "{{ domain_admin_user }}"
+    password: "{{ domain_admin_password | default(ansible_password) }}"
+    state: present
+    path: cn=Users,dc=domain,dc=local
+    groups:
+      set:
+      - Domain Admins
+      - Domain Users
