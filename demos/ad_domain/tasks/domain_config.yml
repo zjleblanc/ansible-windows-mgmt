@@ -30,4 +30,4 @@
     scope: domainlocal
     members:
       add:
-        - domain_admin_user.split('@')[0]
+        - "{{ domain_admin_user.split('@')[0] }}"
