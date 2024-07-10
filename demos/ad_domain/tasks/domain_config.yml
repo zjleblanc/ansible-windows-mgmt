@@ -26,6 +26,5 @@
       add:
         - Domain Admins
         - Domain Users
-    domain_server: "{{ inventory_hostname }}"
     domain_username: "{{ win_domain_admin }}@{{ win_domain }}"
     domain_password: "{{ win_domain_admin_password }}"
