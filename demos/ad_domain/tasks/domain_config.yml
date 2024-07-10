@@ -21,7 +21,7 @@
     identity: "{{ domain_admin_user }}"
     password: "{{ domain_admin_password | default(ansible_password) }}"
     state: present
-    path: cn=Users,dc=domain,dc=local
+    path: CN=Users,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}
     groups:
       set:
       - Domain Admins
