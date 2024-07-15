@@ -1,56 +1,55 @@
 ---
-- name: Setup winrm via psexec 
+- name: Setup winrm via psexec
   hosts: needs_winrm
   gather_facts: false
 
   tasks:
-  - name: Ensure pypsexec exists
-    delegate_to: localhost
-    ansible.builtin.pip:
-      name: pypsexec
-      state: present
+    - name: Ensure pypsexec exists
+      delegate_to: localhost
+      ansible.builtin.pip:
+        name: pypsexec
+        state: present
 
-  # Windows target needs to have port 445 open
-  # netsh advfirewall firewall show rule name="Remote Event Log Management (NP-In)"
-  # netsh advfirewall firewall set rule name="Remote Event Log Management (NP-In)" new enable=yes
-  - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
-    delegate_to: localhost
-    community.windows.psexec:
-      hostname: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
-      connection_username: "{{ proxmox_default_user }}"
-      connection_password: "{{ proxmox_default_password }}"
-      encrypt: yes
-      executable: powershell.exe
-      arguments: '-'
-      stdin: |
-        $ErrorActionPreference = "Stop"
-        $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
-        $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
-        [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
-        $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-        Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
-        exit
+    # Windows target needs to have port 445 open
+    # netsh advfirewall firewall show rule name="Remote Event Log Management (NP-In)"
+    # netsh advfirewall firewall set rule name="Remote Event Log Management (NP-In)" new enable=yes
+    - name: Download and run ConfigureRemotingForAnsible.ps1 to setup WinRM
+      delegate_to: localhost
+      community.windows.psexec:
+        hostname: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+        connection_username: "{{ proxmox_default_user }}"
+        connection_password: "{{ proxmox_default_password }}"
+        encrypt: true
+        executable: powershell.exe
+        arguments: "-"
+        stdin: |
+          $ErrorActionPreference = "Stop"
+          $sec_protocols = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::SystemDefault
+          $sec_protocols = $sec_protocols -bor [Net.SecurityProtocolType]::Tls12
+          [Net.ServicePointManager]::SecurityProtocol = $sec_protocols
+          $url = "https://github.com/ansible/ansible/raw/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+          Invoke-Expression ((New-Object Net.WebClient).DownloadString($url))
+          exit
 
-  - name: Add host to windows group
-    delegate_to: localhost
-    ansible.builtin.include: tasks/add_host_to_group.yml
-    vars:
-      group_name: windows
-      group_desc: Windows VMs in proxmox
-      group_inventory: Proxmox Inventory
+    - name: Add host to windows group
+      delegate_to: localhost
+      ansible.builtin.include: tasks/add_host_to_group.yml
+      vars:
+        group_name: windows
+        group_desc: Windows VMs in proxmox
+        group_inventory: Proxmox Inventory
 
-  - name: Remove host from needs_winrm group
-    delegate_to: localhost
-    ansible.builtin.include: tasks/remove_host_from_group.yml
-    vars:
-      group_name: needs_winrm
-      group_inventory: Proxmox Inventory
+    - name: Remove host from needs_winrm group
+      delegate_to: localhost
+      ansible.builtin.include: tasks/remove_host_from_group.yml
+      vars:
+        group_name: needs_winrm
+        group_inventory: Proxmox Inventory
 
-  - name: Enable host in proxmox inventory
-    delegate_to: localhost
-    ansible.controller.host:
-      name: "{{ inventory_hostname }}"
-      inventory: "Proxmox Inventory"
-      state: present
-      enabled: true
-    
+    - name: Enable host in proxmox inventory
+      delegate_to: localhost
+      ansible.controller.host:
+        name: "{{ inventory_hostname }}"
+        inventory: Proxmox Inventory
+        state: present
+        enabled: true
