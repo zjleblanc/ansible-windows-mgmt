@@ -8,7 +8,7 @@ foreach($share in $shares | Where Path) {
     $size =  (Get-ChildItem $child.FullName -File -Recurse -Depth 1 | Measure Length -Sum).Sum / 1Mb
     $Ansible.Result["folder_sizes"] += [PSCustomObject]@{
       Server = "{{ server}}"
-      Share = $share
+      Share = $share.Name
       FolderName = $child.FullName
       SizeMB = if ($size -eq $null) { 0 } else { $size }
     }
