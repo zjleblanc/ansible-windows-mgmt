@@ -12,7 +12,6 @@
     #     src: C:\Users\Administrator\Documents\example.reg
     #     dest: "{{ playbook_dir }}/example.reg"
     #     flat: true
-
     - name: Create a file from a Jinja2 template
       ansible.windows.win_template:
         src: demo-settings.reg.j2

@@ -1,11 +1,13 @@
 ---
-- name: "insert | query for existing {{ record.type }}"
+- name: insert records
+
+- name: insert | query for existing {{ record.type }}
   register: _snow_api_query
   servicenow.itsm.api_info:
     resource: "{{ record.type }}"
     sysparm_query: "{{ record.exists_query | default('name=' + record.data.name) }}"
 
-- name: "insert | add new {{ record.type }}"
+- name: insert | add new {{ record.type }}
   when: not (_snow_api_query.record|length)
   register: _insert
   servicenow.itsm.api:
@@ -13,7 +15,7 @@
     action: post
     data: "{{ record.data }}"
 
-- name: "insert | update existing {{ record.type }}"
+- name: insert | update existing {{ record.type }}
   when: _snow_api_query.record|length
   register: _update
   servicenow.itsm.api:

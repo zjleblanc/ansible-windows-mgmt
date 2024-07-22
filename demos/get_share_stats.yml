@@ -1,4 +1,3 @@
-# Pass in inventory hostname for your domain controller as _host
 ---
 - name: Get share stats
   hosts: "{{ _host | default('domaincontroller') }}"
@@ -12,7 +11,7 @@
       - win11-guest-2
 
   tasks:
-    - name: "Report on shared folders | {{ server }}"
+    - name: Report on shared folders | {{ server }}
       loop: "{{ server_list }}"
       loop_control:
         loop_var: server
@@ -36,7 +35,7 @@
               $Ansible.Changed = $true;
             }
           }
-    
+
     - name: Print structure Powershell result
       ansible.builtin.debug:
         var: r_share_info
