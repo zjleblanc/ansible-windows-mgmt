@@ -11,7 +11,7 @@
           - proxmox_api_user is defined
           - proxmox_api_token_id is defined
           - proxmox_api_token_secret is defined
-        fail_msg: "Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]"
+        fail_msg: Missing one of the required proxmox authentication variables - promox_api_[host|user|token_id|token_secret]
 
     - name: Ensure proxmox requirements are installed
       ansible.builtin.pip:
@@ -25,5 +25,5 @@
       loop: "{{ proxmox_ve_configs }}"
       loop_control:
         loop_var: pve_config
-      include_role: 
+      ansible.builtin.include_role:
         name: mgmt.pve.proxmox_kvm

@@ -19,7 +19,6 @@
       ansible.builtin.include_tasks:
         file: tasks/domain_config.yml
 
-  handlers:
     - name: Import handlers
       ansible.builtin.import_tasks:
         file: handlers/domain_config.yml

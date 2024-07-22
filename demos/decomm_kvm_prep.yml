@@ -8,24 +8,24 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "Prepping {{ inventory_hostname }} for decomm process"
+        snow_comment: Prepping {{ inventory_hostname }} for decomm process
 
     - name: Add comment | interface facts
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h3>Network Interface Facts</h3>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"  
+        snow_comment: "[code]<h3>Network Interface Facts</h3>[/code]{{ hostvars[inventory_hostname]['ansible_interfaces'] | to_nice_json | codify }}"
 
     - name: Describe instance | smb shares
       register: r_smb_shares
       ansible.windows.win_powershell:
         script: Get-SmbShare | ConvertTo-Json
-        
+
     - name: Add comment | smb shares
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h3>SMB Share Facts</h3>[/code]{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"    
+        snow_comment: "[code]<h3>SMB Share Facts</h3>[/code]{{ r_smb_shares.output[0] | from_json | to_nice_json | codify }}"
 
     - name: Describe instance | SQL Server
       register: r_sql_server
@@ -37,14 +37,14 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h3>SQL Facts</h3>[/code]{{ r_sql_server.properties | to_nice_json | codify }}"   
+        snow_comment: "[code]<h3>SQL Facts</h3>[/code]{{ r_sql_server.properties | to_nice_json | codify }}"
 
     - name: Add comment | sql server
       when: not r_sql_server.exists
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "SQL Server not installed on this machine"
+        snow_comment: SQL Server not installed on this machine
 
     - name: Describe instance | proxmox snapshot
       ansible.builtin.include_role:
@@ -56,7 +56,7 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "[code]<h3>Proxmox Facts</h3>[/code]{{ proxmox_kvm_decomm_data | to_nice_json | codify }}"   
+        snow_comment: "[code]<h3>Proxmox Facts</h3>[/code]{{ proxmox_kvm_decomm_data | to_nice_json | codify }}"
 
     - name: Disable AD object
       tags: ad_disable
@@ -74,6 +74,6 @@
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: >
+        snow_comment: >-
           [code]<h3>Initiating Grace Period</h3>[/code]
           Grace period ends on {{ grace_exp_date }}

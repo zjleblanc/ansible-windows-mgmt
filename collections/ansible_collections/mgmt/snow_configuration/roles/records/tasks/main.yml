@@ -1,4 +1,5 @@
-- name: "insert records" 
+---
+- name: insert records
   loop: "{{ snow_records }}"
   loop_control:
     loop_var: record

@@ -2,19 +2,19 @@
 # aws_vpc_name: # defined in vars/create_infra.yml
 aws_subnet_name: "{{ aws_vpc_name }}-subnet"
 aws_security_group_name: "{{ aws_vpc_name }}-sg"
-aws_key_pair_name: "zleblanc-redhat-mac"
+aws_key_pair_name: zleblanc-redhat-mac
 aws_instance_tags_default:
   Name: "{{ config.instance_name }}"
   provisioner: ansible
   owner: zleblanc@redhat.com
 
 dc_config:
-  ami_filter: "Windows_Server-2022-English-Full-Base*"
+  ami_filter: Windows_Server-2022-English-Full-Base*
   assign_public_ip: true
   assign_elastic_ip: true
   userdata_tmpl: win_ec2_userdata
   wait: true
-  instance_type: "t2.medium"
-  instance_name: "dc01.autodotes.com"
+  instance_type: t2.medium
+  instance_name: dc01.autodotes.com
   instance_tags:
     role: domain_controller

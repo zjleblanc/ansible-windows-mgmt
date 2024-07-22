@@ -11,8 +11,8 @@
         path: "{{ playbook_dir }}/files/groups.csv"
         key: GroupName
 
-      # Fields ignored (for now)
-      # Members, DFS, Gateway, Notes, Ticket
+    # Fields ignored (for now)
+
     - name: Create AD groups
       loop: "{{ r_groups.dict | dict2items }}"
       loop_control:
