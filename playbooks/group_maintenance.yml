@@ -1,0 +1,24 @@
+---
+- name: Use Ansible to maintain desired state of AD groups
+  hosts: domain_controller
+  gather_facts: false
+
+  tasks:
+    # - name: Test connection
+    #   ansible.builtin.wait_for_connection:
+    #     timeout: 30
+
+    - name: Create Ansible User Group
+      ansible.windows.win_group:
+        name: Ansible Users
+        description: Users created by Ansible product demos Create Domain job
+        state: present
+
+    - name: Ensure group matches desired state (membership)
+      win_group_membership_mod:
+        name: Ansible Users
+        members:
+          - ANSIBLE\UserA
+          - ANSIBLE\UserX
+        state: pure
+        ignore_invalid: true
