@@ -14,6 +14,7 @@
     snow_oauth_profile_name: "Ansible Controller Write Profile"
     controller_host: "{{ lookup('env', 'CONTROLLER_HOST') }}"
     controller_org: 3 # <SET ME>
+    controller_org_name: Autodotes # <SET_ME>
 
   tasks:
     - name: AAP | Delete existing application (if exists)
@@ -21,7 +22,7 @@
       tags: oauth
       ansible.controller.application:
         name: "{{ snow_app_name }}"
-        organization: Autodotes
+        organization: "{{ controller_org_name }}"
         state: "absent"
 
     - name: AAP | Create Service Now application
