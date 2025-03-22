@@ -4,10 +4,6 @@
   gather_facts: false
 
   tasks:
-    # - name: Test connection
-    #   ansible.builtin.wait_for_connection:
-    #     timeout: 30
-
     - name: Create Ansible User Group
       ansible.windows.win_group:
         name: Ansible Users
@@ -22,3 +18,20 @@
           - ANSIBLE\UserX
         state: pure
         ignore_invalid: true
+
+    ### Example return object ###
+
+    # {
+    #     "added": [
+    #         "ANSIBLE\\UserA"
+    #     ],
+    #     "changed": true,
+    #     "invalid": [
+    #         "ANSIBLE\\UserX"
+    #     ],
+    #     "members": [
+    #         "ANSIBLE\\UserA"
+    #     ],
+    #     "name": "Ansible Users",
+    #     "removed": []
+    # }
