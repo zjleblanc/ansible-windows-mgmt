@@ -15,6 +15,6 @@
     - vars/secrets.yml
 
   tasks:
-    - name: Join new windows hosts to domain 
+    - name: Join new windows hosts to domain
       ansible.builtin.include_tasks:
         file: tasks/domain_join.yml

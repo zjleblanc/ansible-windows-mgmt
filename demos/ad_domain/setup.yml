@@ -1,9 +1,9 @@
 ---
 - name: Create AWS Infrastructure
-  ansible.builtin.import_playbook: pb_aws_infra.yml 
+  ansible.builtin.import_playbook: pb_aws_infra.yml
 
 - name: Configure Domain Controller
-  ansible.builtin.import_playbook: pb_domain_config.yml 
+  ansible.builtin.import_playbook: pb_domain_config.yml
 
 - name: Join Domain
-  ansible.builtin.import_playbook: pb_domain_join.yml 
+  ansible.builtin.import_playbook: pb_domain_join.yml
