@@ -3,6 +3,14 @@
   hosts: domain_controller
   gather_facts: false
 
+  vars:
+    member_list:
+      - ANSIBLE\UserA
+      - ANSIBLE\UserB
+      - ANSIBLE\UserX
+      - ANSIBLE\UserY
+      - ANSIBLE\UserZ
+
   tasks:
     - name: Create Ansible User Group
       ansible.windows.win_group:
@@ -10,14 +18,28 @@
         description: Users created by Ansible product demos Create Domain job
         state: present
 
+    # - name: Run PowerShell
+    #   register: r_custom_script
+    #   ansible.windows.win_powershell:
+    #     script: "{{ lookup('file', 'powershell/validate_users.ps1') }}"
+    #     parameters:
+    #       Members: "{{ member_list }}"
+  
+    # - name: Inspect modified output
+    #   ansible.builtin.debug:
+    #     var: r_custom_script
+
     - name: Ensure group matches desired state (membership)
+      register: r_modified
       win_group_membership_mod:
         name: Ansible Users
-        members:
-          - ANSIBLE\UserA
-          - ANSIBLE\UserX
+        members: "{{ member_list }}" 
         state: pure
         ignore_invalid: true
+
+    - name: Inspect modified output
+      ansible.builtin.debug:
+        var: r_modified
 
     ### Example return object ###
 
