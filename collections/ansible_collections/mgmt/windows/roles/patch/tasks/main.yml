@@ -14,7 +14,7 @@
       ansible.builtin.file:
         path: "{{ patch_report_dest_dir }}"
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Generate report based on search
       when: skip_install
@@ -24,7 +24,7 @@
       ansible.builtin.template:
         src: search_report.html.j2
         dest: "{{ patch_report_dest_dir }}/{{ inventory_hostname }}_patch_report.html"
-        mode: '0644'
+        mode: "0644"
 
 - name: Install updates
   when: not skip_install
