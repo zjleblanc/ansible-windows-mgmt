@@ -6,8 +6,8 @@
   vars:
     domain_controller: dc01.AUTODOTES.LOCAL
     domain_name: autodotes.local
-    kvm_name: undef                 # hcl-guest-1
-    sys_id: undef                   # 5df9395e47003110cea484d7536d439b
+    kvm_name: undef # hcl-guest-1
+    sys_id: undef # 5df9395e47003110cea484d7536d439b
 
   tasks:
     - name: Assert required inputs
@@ -16,12 +16,12 @@
           - kvm_name != 'undef'
           - sys_id != 'undef'
         fail_msg: "Missing (at least) one required input: kvm_name and sys_id"
-    
+
     - name: Add comment | init decomm
       ansible.builtin.include_tasks:
         file: tasks/snow_comment.yml
       vars:
-        snow_comment: "Beginning decomm process for {{ kvm_name }}"
+        snow_comment: Beginning decomm process for {{ kvm_name }}
 
     - name: Delete AD object
       tags: ad_delete
@@ -32,29 +32,29 @@
 
     - name: Delete agents
       ansible.builtin.debug:
-        msg: "Delete McAfee and HIPS agent"
+        msg: Delete McAfee and HIPS agent
 
     - name: Purge puppet
       ansible.builtin.debug:
-        msg: "Purge puppet"
+        msg: Purge puppet
 
     - name: Clean up external records
       ansible.builtin.debug:
-        msg: "Delete entries from Webber/Emurald/SA4"
+        msg: Delete entries from Webber/Emurald/SA4
 
     - name: Remove ITPA IDs
       ansible.builtin.debug:
-        msg: "Delete cyberark accounts"
+        msg: Delete cyberark accounts
 
     - name: SQL retirement
       ansible.builtin.debug:
-        msg: "Retire SQL instance (if applicable)"
+        msg: Retire SQL instance (if applicable)
 
     - name: Delete DNS entries
       tags: dns_delete
       delegate_to: "{{ domain_controller }}"
       register: r_dns_entry
-      loop: ['A','AAAA']
+      loop: [A, AAAA]
       loop_control:
         loop_var: type
       community.windows.win_dns_record:

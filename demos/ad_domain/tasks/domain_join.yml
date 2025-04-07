@@ -4,13 +4,13 @@
     timeout: 300
 
 - name: Disable ipv6
-  ansible.windows.win_powershell: 
+  ansible.windows.win_powershell:
     script: Disable-NetAdapterBinding -Name 'Ethernet' -ComponentId ms_tcpip6
 
 - name: Configure domain controller as nameserver
   ansible.windows.win_dns_client:
     adapter_names: Ethernet*
-    dns_servers: 
+    dns_servers:
       - "{{ win_domain_controller_ip }}"
 
 - name: Join domain
@@ -20,7 +20,7 @@
       delegate_to: "{{ win_domain_controller }}"
       tags: cleanup
       register: r_dns_entry
-      loop: ['A','AAAA']
+      loop: [A, AAAA]
       loop_control:
         loop_var: type
       community.windows.win_dns_record:
@@ -40,7 +40,7 @@
       tags: cleanup
       microsoft.ad.object:
         name: "{{ inventory_hostname.split('.')[0] }}"
-        path: "OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}"
+        path: OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}
         state: absent
 
     - name: Join domain
@@ -53,11 +53,11 @@
         hostname: "{{ inventory_hostname.split('.')[0] }}"
         domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
         domain_admin_password: "{{ win_domain_admin_password }}"
-        domain_ou_path: "OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}"
+        domain_ou_path: OU=AWS,DC={{ win_domain.split('.')[0] }},DC={{ win_domain.split('.')[1] }}
         state: domain
-    
+
 - name: Reboot to complete domain join
-  when: 
+  when:
     - r_domain_membership.reboot_required
     - not skip_reboot|default(false)
   ansible.builtin.win_reboot:
