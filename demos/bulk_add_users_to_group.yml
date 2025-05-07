@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    search_root: "DC=autodotes,DC=local"
+    search_root: DC=autodotes,DC=local
     target_group: Austin
     user_accounts: |
       sql_svc
@@ -28,7 +28,7 @@
         user_accounts_valid: "{{ r_users.objects | map(attribute='samAccountName') | intersect(user_account_list) }}"
         user_accounts_invalid: "{{ user_account_list | difference(r_users.objects | map(attribute='samAccountName')) }}"
 
-    - name: "Add valid users to target group | {{ target_group }}"
+    - name: Add valid users to target group | {{ target_group }}
       community.windows.win_domain_group_membership:
         name: "{{ target_group }}"
         members: "{{ user_accounts_valid  }}"

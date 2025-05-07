@@ -1,9 +1,9 @@
+---
 galaxy_info:
   author: Zach LeBlanc
   description: >
-    This role installs PowerShell requirements and adds Windows features required 
-    for SQL Server before completing an installation of a SQL Server instance using 
-    desired state configuration.
+    This role installs PowerShell requirements and adds Windows features required  for SQL Server before completing an installation of a SQL Server instance using  desired
+    state configuration.
   company: Red Hat
 
   # If the issue tracker for your role is not on github, uncomment the
