@@ -24,7 +24,7 @@
     #     script: "{{ lookup('file', 'powershell/validate_users.ps1') }}"
     #     parameters:
     #       Members: "{{ member_list }}"
-  
+
     # - name: Inspect modified output
     #   ansible.builtin.debug:
     #     var: r_custom_script
@@ -33,7 +33,7 @@
       register: r_modified
       win_group_membership_mod:
         name: Ansible Users
-        members: "{{ member_list }}" 
+        members: "{{ member_list }}"
         state: pure
         ignore_invalid: true
 

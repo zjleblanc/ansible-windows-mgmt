@@ -1,17 +1,17 @@
 ---
-- name: "Get {{ inventory_hostname }} details"
+- name: Get {{ inventory_hostname }} details
   register: r_host_details
   ansible.controller.host:
     name: "{{ inventory_hostname }}"
     inventory: "{{ group_inventory }}"
 
-- name: "Get {{ group_name }} details"
+- name: Get {{ group_name }} details
   register: r_group_details
   ansible.controller.group:
     name: "{{ group_name }}"
     inventory: "{{ group_inventory }}"
 
-- name: "Disassociate {{ inventory_hostname }} from {{ group_name }}"
+- name: Disassociate {{ inventory_hostname }} from {{ group_name }}
   register: r_remove_host
   uri:
     url: "{{ lookup('env', 'CONTROLLER_HOST') }}/api/v2/groups/{{ r_group_details.id }}/hosts/"
@@ -21,7 +21,7 @@
         "id": {{ r_host_details.id | int }},
         "disassociate": true
       }    
-    body_format: json  
+    body_format: json
     headers:
-      Authorization: "Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}"
-    status_code: [200,204]
+      Authorization: Bearer {{ lookup('env', 'CONTROLLER_OAUTH_TOKEN') }}
+    status_code: [200, 204]
