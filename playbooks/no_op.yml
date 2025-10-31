@@ -4,6 +4,10 @@
   gather_facts: false
 
   tasks:
+    - name: Override message
+      ansible.builtin.debug:
+        msg: I successfully overrode the branch!
+
     - name: Print message
       ansible.builtin.debug:
         msg: "{{ snow_msg | default(_msg) | default('No message provided') }}"
