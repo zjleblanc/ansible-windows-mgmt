@@ -8,6 +8,7 @@ plugin: microsoft.ad.ldap
 # username:
 # password:
 ### End custom credential type ###
+cert_validation: ignore
 
 search_base: OU=Demo,DC=ansible,DC=local
 attributes:
