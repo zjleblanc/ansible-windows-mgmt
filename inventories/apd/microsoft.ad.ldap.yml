@@ -13,6 +13,8 @@ search_base: OU=Demo,DC=ansible,DC=local
 attributes:
   dNSHostName: 
     dns_host_name: this | upper
+  objectSid:
+    computer_sid:
 
 
 # see plugin documentation for additional configuration properties for filtering, grouping, etc.
