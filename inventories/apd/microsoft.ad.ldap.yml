@@ -1,0 +1,18 @@
+# Name the file microsoft.ad.ldap.yml
+
+plugin: microsoft.ad.ldap
+
+### Supplied by custom credential type ###
+# server: 
+# port:
+# username:
+# password:
+### End custom credential type ###
+
+search_base: OU=Demo,DC=ansible,DC=local
+attributes:
+  dNSHostName:
+    dns_host_name: this | lower
+compose:
+  inventory_hostname: dns_host_name
+# see plugin documentation for additional configuration properties for filtering, grouping, etc.
