@@ -11,8 +11,8 @@ plugin: microsoft.ad.ldap
 
 search_base: OU=Demo,DC=ansible,DC=local
 attributes:
-  dNSHostName:
-    dns_host_name: this | lower
-compose:
-  random_var: dns_host_name | lower
+  dNSHostName: 
+    dns_host_name: this | upper
+
+
 # see plugin documentation for additional configuration properties for filtering, grouping, etc.
