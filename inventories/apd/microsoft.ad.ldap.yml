@@ -13,6 +13,6 @@ search_base: OU=Demo,DC=ansible,DC=local
 attributes:
   dNSHostName:
     dns_host_name: this | lower
-# compose:
-#   inventory_hostname: dns_host_name
+compose:
+  random_var: dns_host_name | lower
 # see plugin documentation for additional configuration properties for filtering, grouping, etc.
