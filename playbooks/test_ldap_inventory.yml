@@ -1,0 +1,9 @@
+---
+- name: Test LDAP inventory
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Debug host vars
+      ansible.builtin.debug:
+        msg: "{{ dns_host_name }} -> {{ computer_sid }}"
