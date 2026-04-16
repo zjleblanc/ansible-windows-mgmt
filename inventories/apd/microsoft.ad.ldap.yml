@@ -8,12 +8,11 @@ plugin: microsoft.ad.ldap
 # username:
 # password:
 ### End custom credential type ###
-cert_validation: ignore
 
 search_base: OU=Demo,DC=ansible,DC=local
 attributes:
   dNSHostName:
     dns_host_name: this | lower
 compose:
-  inventory_hostname: dns_host_name
+  inventory_hostname: "dns_host_name | string"
 # see plugin documentation for additional configuration properties for filtering, grouping, etc.
