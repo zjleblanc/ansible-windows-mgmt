@@ -2,36 +2,36 @@
 # aws_vpc_name: # defined in vars/create_infra.yml
 aws_subnet_name: "{{ aws_vpc_name }}-subnet"
 aws_security_group_name: "{{ aws_vpc_name }}-sg"
-aws_key_pair_name: "zleblanc-redhat-mac"
+aws_key_pair_name: zleblanc-redhat-mac
 aws_instance_tags_default:
   Name: "{{ config.instance_name }}"
   provisioner: ansible
   owner: zleblanc@redhat.com
 
 nodes:
-- instance_name: winston.autodotes.com
-  ami_filter: "Windows_Server-2019-English-Core-Base*"
-  instance_type: "t2.micro"
-  instance_tags:
-    role: domain_computer
-  instance_tags_default:
-    Name: "winston.autodotes.com"
-    provisioner: ansible
-    owner: zleblanc@redhat.com
-  userdata_tmpl: win_ec2_userdata
-  assign_public_ip: true
-  assign_elastic_ip: false
-  wait: true
-- instance_name: winthrop.autodotes.com
-  ami_filter: "Windows_Server-2019-English-Core-Base*"
-  instance_type: "t2.micro"
-  instance_tags:
-    role: domain_computer
-  instance_tags_default:
-    Name: "winthrop.autodotes.com"
-    provisioner: ansible
-    owner: zleblanc@redhat.com
-  userdata_tmpl: win_ec2_userdata
-  assign_public_ip: true
-  assign_elastic_ip: false
-  wait: true
+  - instance_name: winston.autodotes.com
+    ami_filter: Windows_Server-2019-English-Core-Base*
+    instance_type: t2.micro
+    instance_tags:
+      role: domain_computer
+    instance_tags_default:
+      Name: winston.autodotes.com
+      provisioner: ansible
+      owner: zleblanc@redhat.com
+    userdata_tmpl: win_ec2_userdata
+    assign_public_ip: true
+    assign_elastic_ip: false
+    wait: true
+  - instance_name: winthrop.autodotes.com
+    ami_filter: Windows_Server-2019-English-Core-Base*
+    instance_type: t2.micro
+    instance_tags:
+      role: domain_computer
+    instance_tags_default:
+      Name: winthrop.autodotes.com
+      provisioner: ansible
+      owner: zleblanc@redhat.com
+    userdata_tmpl: win_ec2_userdata
+    assign_public_ip: true
+    assign_elastic_ip: false
+    wait: true

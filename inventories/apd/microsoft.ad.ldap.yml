@@ -1,3 +1,4 @@
+---
 # Name the file microsoft.ad.ldap.yml
 
 plugin: microsoft.ad.ldap
@@ -11,7 +12,7 @@ plugin: microsoft.ad.ldap
 
 search_base: OU=Demo,DC=ansible,DC=local
 attributes:
-  dNSHostName: 
+  dNSHostName:
     dns_host_name: this | upper
   objectSid:
     computer_sid:
