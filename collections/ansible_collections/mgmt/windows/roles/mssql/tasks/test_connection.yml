@@ -6,7 +6,7 @@
     Install-Module PowerShellGet -AllowClobber -Force
     Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
-- name: "Ensure {{ mssql_domain_controller }} has SqlServer module"
+- name: Ensure {{ mssql_domain_controller }} has SqlServer module
   tags:
     - test
     - test_sql
@@ -15,7 +15,7 @@
     state: present
     accept_license: true
 
-- name: "Test connection with SQL query from {{ mssql_domain_controller }}"
+- name: Test connection with SQL query from {{ mssql_domain_controller }}
   tags:
     - test
     - test_sql
