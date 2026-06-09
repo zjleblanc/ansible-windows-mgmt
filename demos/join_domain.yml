@@ -12,13 +12,13 @@
         timeout: 60
 
     - name: Disable ipv6
-      ansible.windows.win_powershell: 
+      ansible.windows.win_powershell:
         script: Disable-NetAdapterBinding -Name 'Ethernet Instance 0' -ComponentId ms_tcpip6
-    
+
     - name: Configure domain controller as nameserver
       ansible.windows.win_dns_client:
         adapter_names: Ethernet*
-        dns_servers: 
+        dns_servers:
           - "{{ hostvars[domain_controller]['ansible_host'] }}"
           - 192.168.0.1
 
@@ -30,7 +30,7 @@
           delegate_to: "{{ domain_controller }}"
           tags: cleanup
           register: r_dns_entry
-          loop: ['A','AAAA']
+          loop: [A, AAAA]
           loop_control:
             loop_var: type
           community.windows.win_dns_record:
@@ -56,7 +56,7 @@
             hostname: "{{ inventory_hostname.split('.')[0] }}"
             domain_admin_user: "{{ win_domain_admin }}@{{ win_domain }}"
             domain_admin_password: "{{ win_domain_admin_password }}"
-            domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+            domain_ou_path: OU=Computers,OU=lab,DC=autodotes,DC=local
             state: domain
 
         - name: Add DNS entries
@@ -70,9 +70,9 @@
             value: "{{ ansible_host }}"
             zone: "{{ win_domain }}"
             state: present
-        
+
     - name: Reboot to complete domain join
-      when: 
+      when:
         - r_domain_membership.reboot_required
         - not skip_reboot|default(false)
       ansible.builtin.win_reboot:
@@ -84,13 +84,13 @@
       delegate_to: localhost
       ansible.controller.host:
         name: "{{ inventory_hostname }}"
-        inventory: "Proxmox Inventory"
+        inventory: Proxmox Inventory
         state: present
         enabled: true
-        variables: 
+        variables:
           domain_name: "{{ win_domain }}"
           domain_dns_address: "{{ hostvars['dc01.AUTODOTES.LOCAL']['ansible_host'] }}"
-          domain_ou_path: "OU=Computers,OU=lab,DC=autodotes,DC=local"
+          domain_ou_path: OU=Computers,OU=lab,DC=autodotes,DC=local
 
     - name: Add host to windows group
       delegate_to: localhost

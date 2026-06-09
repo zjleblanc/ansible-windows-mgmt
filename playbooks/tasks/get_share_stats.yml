@@ -1,5 +1,5 @@
 ---
-- name: "Report on shared folders | {{ server }}"
+- name: Report on shared folders | {{ server }}
   register: r_folder_sizes
   ansible.windows.win_powershell:
     script: "{{ lookup('template', playbook_dir + '/templates/get_share_stats.ps1.j2') }}"

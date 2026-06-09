@@ -6,7 +6,7 @@
   vars:
     patch_allow_reboot: true
     patch_failed_report: true
-    patch_failed_report_dest: "C:\\ansible_failed_updates.txt"
+    patch_failed_report_dest: C:\ansible_failed_updates.txt
     patch_categories:
       - SecurityUpdates
       - CriticalUpdates

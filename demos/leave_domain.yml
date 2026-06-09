@@ -12,13 +12,13 @@
         timeout: 60
 
     - name: Disable ipv6
-      ansible.windows.win_powershell: 
+      ansible.windows.win_powershell:
         script: Disable-NetAdapterBinding -Name 'Ethernet Instance 0' -ComponentId ms_tcpip6
-    
+
     - name: Reconfigure default DNS
       ansible.windows.win_dns_client:
         adapter_names: Ethernet*
-        dns_servers: 
+        dns_servers:
           - 192.168.0.1
 
     - name: Leave Autodotes domain
@@ -27,7 +27,7 @@
         - name: Remove legacy dns entries
           delegate_to: "{{ domain_controller }}"
           register: r_dns_entry
-          loop: ['A','AAAA']
+          loop: [A, AAAA]
           loop_control:
             loop_var: type
           community.windows.win_dns_record:

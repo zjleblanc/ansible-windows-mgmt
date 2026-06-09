@@ -29,12 +29,12 @@
 - name: Install required powershell modules
   tags: prereqs
   loop:
-      - name: StorageDsc
-      - name: ServerManager
-      - name: dbatools
-      - name: xNetworking
-      - name: SqlServerDsc
-        required_version: "16.2.0"
+    - name: StorageDsc
+    - name: ServerManager
+    - name: dbatools
+    - name: xNetworking
+    - name: SqlServerDsc
+      required_version: 16.2.0
   loop_control:
     loop_var: module
   community.windows.win_psmodule:
@@ -46,11 +46,11 @@
 - name: Install required features
   tags: prereqs
   loop:
-      - name: NET-Framework-Features
-      - name: NET-Framework-45-Features
-        include_sub_features: True
-      - name: WAS
-        include_sub_features: True
+    - name: NET-Framework-Features
+    - name: NET-Framework-45-Features
+      include_sub_features: true
+    - name: WAS
+      include_sub_features: true
   loop_control:
     loop_var: feature
     label: "{{ feature.name }}"
@@ -68,9 +68,9 @@
     firstname: "{{ mssql_instance_name }}"
     surname: SQLSvc
     password: "{{ mssql_sqlsvc_account_pass }}"
-    password_never_expires: yes
-    user_cannot_change_password: yes
-    description: "SQL Service account for {{ inventory_hostname }}\\{{ mssql_instance_name }}"
+    password_never_expires: true
+    user_cannot_change_password: true
+    description: SQL Service account for {{ inventory_hostname }}\{{ mssql_instance_name }}
     state: present
     path: "{{ mssql_base_ldap_path }}"
     groups:
@@ -84,9 +84,9 @@
     firstname: "{{ mssql_instance_name }}"
     surname: AgentSvc
     password: "{{ mssql_agentsvc_account_pass }}"
-    password_never_expires: yes
-    user_cannot_change_password: yes
-    description: "SQL Agent service account for {{ inventory_hostname }}\\{{ mssql_instance_name }}"
+    password_never_expires: true
+    user_cannot_change_password: true
+    description: SQL Agent service account for {{ inventory_hostname }}\{{ mssql_instance_name }}
     state: present
     path: "{{ mssql_base_ldap_path }}"
     groups:
@@ -110,9 +110,10 @@
     path: "{{ mssql_installation_path }}"
     state: directory
 
-- name: "Use Media Downloader to fetch SQL Installation CABs to {{ mssql_installation_path }}"
+- name: Use Media Downloader to fetch SQL Installation CABs to {{ mssql_installation_path }}
   tags: fetch_media
-  ansible.windows.win_shell: "{{ mssql_temp_download_path }}\\SQLServer{{ mssql_version }}-SSEI-Dev.exe /Action=Download /MediaPath={{ mssql_installation_path }} /MediaType=CAB /Quiet"
+  ansible.windows.win_shell: "{{ mssql_temp_download_path }}\\SQLServer{{ mssql_version }}-SSEI-Dev.exe /Action=Download /MediaPath={{ mssql_installation_path }}
+    /MediaType=CAB /Quiet"
 
 - name: Ensure installation media extraction path is empty
   tags: fetch_media
@@ -140,7 +141,7 @@
   ansible.windows.win_dsc:
     resource_name: SQLSetup
     Action: Install
-    UpdateEnabled: False
+    UpdateEnabled: false
     SourcePath: "{{ mssql_installation_path }}\\Media"
     InstanceName: "{{ mssql_instance_name }}"
     InstallSharedDir: "{{ mssql_installshared_path }}"
@@ -177,90 +178,90 @@
 
 - name: Firewall // Allow Database Engine for instance
   tags:
-    - configure 
+    - configure
     - configure_firewall
   community.windows.win_firewall_rule:
-    name: "SQL Server Database Engine instance {{ mssql_instance_name }}"
+    name: SQL Server Database Engine instance {{ mssql_instance_name }}
     description: Allows the Database Engine to access the network
     localport: 1433
     action: allow
     direction: in
     protocol: tcp
     state: present
-    enabled: yes
+    enabled: true
 
 - name: Firewall // Allow SQLBrowser for instance
   tags:
-    - configure 
+    - configure
     - configure_firewall
   community.windows.win_firewall_rule:
-    name: "SQL Server Browser instance {{ mssql_instance_name }}"
+    name: SQL Server Browser instance {{ mssql_instance_name }}
     description: Allows the SQL Server Browser to access the network
     localport: 1434
     action: allow
     direction: in
     protocol: udp
     state: present
-    enabled: yes
+    enabled: true
 
 - name: Begin SQL Server configuration
-  block: 
-  - name: Listen on all addresses
-    tags:
-      - configure
-      - configure_sql_firewall
-    ansible.windows.win_dsc:
-      resource_name: SqlProtocol
-      InstanceName: "{{ mssql_instance_name }}"
-      ProtocolName: TcpIp
-      ListenOnAllIpAddresses: True
-      Enabled: True
+  block:
+    - name: Listen on all addresses
+      tags:
+        - configure
+        - configure_sql_firewall
+      ansible.windows.win_dsc:
+        resource_name: SqlProtocol
+        InstanceName: "{{ mssql_instance_name }}"
+        ProtocolName: TcpIp
+        ListenOnAllIpAddresses: true
+        Enabled: true
 
-  - name: Enable TCP Connectivity
-    tags:
-      - configure
-      - configure_sql
-    ansible.windows.win_dsc:
-      resource_name: SqlProtocolTcpIp
-      InstanceName: "{{ mssql_instance_name }}"
-      TcpPort: "{{ mssql_port }}"
-      IPAddressGroup: IpAll
-      Enabled: True
-      SuppressRestart: False
+    - name: Enable TCP Connectivity
+      tags:
+        - configure
+        - configure_sql
+      ansible.windows.win_dsc:
+        resource_name: SqlProtocolTcpIp
+        InstanceName: "{{ mssql_instance_name }}"
+        TcpPort: "{{ mssql_port }}"
+        IPAddressGroup: IpAll
+        Enabled: true
+        SuppressRestart: false
 
-  - name: Adjust Max Server Memory to {{ mssql_max_server_memory }}
-    tags:
-      - configure 
-      - configure_sql
-    when: mssql_max_server_memory is defined
-    ansible.windows.win_dsc:
-      resource_name: SqlConfiguration 
-      InstanceName: "{{ mssql_instance_name }}"
-      ServerName: localhost
-      OptionName: max server memory (MB)
-      OptionValue: "{{ mssql_max_server_memory }}"
-      RestartService: False
+    - name: Adjust Max Server Memory to {{ mssql_max_server_memory }}
+      tags:
+        - configure
+        - configure_sql
+      when: mssql_max_server_memory is defined
+      ansible.windows.win_dsc:
+        resource_name: SqlConfiguration
+        InstanceName: "{{ mssql_instance_name }}"
+        ServerName: localhost
+        OptionName: max server memory (MB)
+        OptionValue: "{{ mssql_max_server_memory }}"
+        RestartService: false
 
-  - name: Adjust Min Server Memory to {{ mssql_min_server_memory }}
-    when: mssql_min_server_memory is defined
-    tags:
-      - configure
-      - configure_sql
-    ansible.windows.win_dsc:
-      resource_name: SqlConfiguration 
-      ServerName: localhost
-      InstanceName: "{{ mssql_instance_name }}"
-      OptionName: min server memory (MB)
-      OptionValue: "{{ mssql_min_server_memory }}"
+    - name: Adjust Min Server Memory to {{ mssql_min_server_memory }}
+      when: mssql_min_server_memory is defined
+      tags:
+        - configure
+        - configure_sql
+      ansible.windows.win_dsc:
+        resource_name: SqlConfiguration
+        ServerName: localhost
+        InstanceName: "{{ mssql_instance_name }}"
+        OptionName: min server memory (MB)
+        OptionValue: "{{ mssql_min_server_memory }}"
 
-  - name: Adjust Max Degree of Parallelism
-    when: mssql_max_degree_of_parallelism is defined
-    tags:
-      - configure
-      - configure_sql
-    ansible.windows.win_dsc:
-      resource_name: SqlConfiguration
-      ServerName: localhost
-      InstanceName: "{{ mssql_instance_name }}"
-      OptionName: max degree of parallelism
-      OptionValue: "{{ mssql_max_degree_of_parallelism }}"
+    - name: Adjust Max Degree of Parallelism
+      when: mssql_max_degree_of_parallelism is defined
+      tags:
+        - configure
+        - configure_sql
+      ansible.windows.win_dsc:
+        resource_name: SqlConfiguration
+        ServerName: localhost
+        InstanceName: "{{ mssql_instance_name }}"
+        OptionName: max degree of parallelism
+        OptionValue: "{{ mssql_max_degree_of_parallelism }}"

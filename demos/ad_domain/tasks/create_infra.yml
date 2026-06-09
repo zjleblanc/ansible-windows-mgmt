@@ -31,47 +31,47 @@
     rules:
       - proto: tcp
         ports:
-          - 80  # HTTP
-          - 443  # HTTPS
-          - 22  # SSH
-          - 5986  # WinRM
-          - 3389  # RDP
-          - 88  # Kerberos Authentication
-          - 53  # DNS
-        cidr_ip: 0.0.0.0/0
+          - 80 # HTTP
+          - 443 # HTTPS
+          - 22 # SSH
+          - 5986 # WinRM
+          - 3389 # RDP
+          - 88 # Kerberos Authentication
+          - 53 # DNS
+        cidr_ip: "0.0.0.0/0"
       - proto: icmp
         to_port: -1
         from_port: -1
-        cidr_ip: 0.0.0.0/0
+        cidr_ip: "0.0.0.0/0"
       - proto: tcp
         ports:
-          - 80  # HTTP
-          - 5986  # WinRM
-          - 3389  # RDP
-          - 135  # RPC
-          - 139  # Netlogon
-          - 389  # LDAP
-          - 445  # SMB
-          - 464  # Kerberos Authentication
-          - 5432  # PostgreSQL
-          - 636  # LDAPS (LDAP over TLS)
-          - 873  # Rsync
-          - 3268-3269  # Global Catalog
-          - 1024-65535  # Ephemeral RPC ports
+          - 80 # HTTP
+          - 5986 # WinRM
+          - 3389 # RDP
+          - 135 # RPC
+          - 139 # Netlogon
+          - 389 # LDAP
+          - 445 # SMB
+          - 464 # Kerberos Authentication
+          - 5432 # PostgreSQL
+          - 636 # LDAPS (LDAP over TLS)
+          - 873 # Rsync
+          - 3268-3269 # Global Catalog
+          - 1024-65535 # Ephemeral RPC ports
         cidr_ip: "{{ aws_vpc_cidr_block }}"
       - proto: udp
         ports:
-          - 53   # DNS
-          - 123  # NTP
-          - 137-138  # Netlogon
-          - 389  # LDAP
-          - 445  # SMB
-          - 464  # Kerberos Authentication
-          - 1024-65535  # Ephemeral RPC ports
+          - 53 # DNS
+          - 123 # NTP
+          - 137-138 # Netlogon
+          - 389 # LDAP
+          - 445 # SMB
+          - 464 # Kerberos Authentication
+          - 1024-65535 # Ephemeral RPC ports
         cidr_ip: "{{ aws_vpc_cidr_block }}"
     rules_egress:
       - proto: -1
-        cidr_ip: 0.0.0.0/0
+        cidr_ip: "0.0.0.0/0"
     vpc_id: "{{ r_vpc.vpc.id }}"
     tags:
       Name: "{{ aws_vpc_name }}-sg"
@@ -99,7 +99,7 @@
     subnets:
       - "{{ r_subnet.subnet.id }}"
     routes:
-      - dest: 0.0.0.0/0
+      - dest: "0.0.0.0/0"
         gateway_id: "{{ r_igw.gateway_id }}"
     tags:
       Name: "{{ aws_vpc_name }}-vpc-rtbl"

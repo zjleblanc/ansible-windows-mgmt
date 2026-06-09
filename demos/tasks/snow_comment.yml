@@ -1,5 +1,5 @@
 ---
-- name: "Add comment | {{ snow_resource }}:{{ snow_sys_id }}"
+- name: Add comment | {{ snow_resource }}:{{ snow_sys_id }}
   delegate_to: localhost
   tags: comment
   servicenow.itsm.api:

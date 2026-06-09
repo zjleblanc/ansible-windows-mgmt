@@ -7,5 +7,5 @@
 
 - name: restart sqlagent
   ansible.windows.win_service:
-    name: "SQLAgent${{ mssql_instance_name|upper }}"
+    name: SQLAgent${{ mssql_instance_name|upper }}
     state: restarted

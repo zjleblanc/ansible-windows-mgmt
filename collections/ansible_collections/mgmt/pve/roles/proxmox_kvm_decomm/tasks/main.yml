@@ -32,7 +32,7 @@
     body_format: json
     body:
       snapname: "{{ proxmox_kvm_decomm_name }}-{{ r_kvm_lookup.vmid }}-snap-{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
-      description: "Snapshot taken by ansible decommissioning process @ {{ lookup('pipe', 'date +\"%Y-%m-%d %H:%M:%S\"') }}"
+      description: Snapshot taken by ansible decommissioning process @ {{ lookup('pipe', 'date +"%Y-%m-%d %H:%M:%S"') }}
       vmstate: true
 
 - name: Get snapshot info
